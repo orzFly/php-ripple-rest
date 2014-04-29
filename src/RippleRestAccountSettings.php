@@ -29,10 +29,8 @@ class RippleRestAccountSettings extends RippleRestObject {
      */
     protected static $__properties = array(
         "account" => "Account", 
-        "account" => "Account", 
         "regular_key" => "RegularKey", 
         "regularkey" => "RegularKey", 
-        "url" => "Url", 
         "url" => "Url", 
         "email_hash" => "EmailHash", 
         "emailhash" => "EmailHash", 
@@ -51,8 +49,6 @@ class RippleRestAccountSettings extends RippleRestObject {
         "trustline_count" => "TrustlineCount", 
         "trustlinecount" => "TrustlineCount", 
         "ledger" => "Ledger", 
-        "ledger" => "Ledger", 
-        "hash" => "Hash", 
         "hash" => "Hash"
     );
     

@@ -33,8 +33,6 @@ class RippleRestOrder extends RippleRestObject {
      */
     protected static $__properties = array(
         "account" => "Account", 
-        "account" => "Account", 
-        "buy" => "Buy", 
         "buy" => "Buy", 
         "base_amount" => "BaseAmount", 
         "baseamount" => "BaseAmount", 
@@ -55,16 +53,10 @@ class RippleRestOrder extends RippleRestObject {
         "cancel_replace" => "CancelReplace", 
         "cancelreplace" => "CancelReplace", 
         "sequence" => "Sequence", 
-        "sequence" => "Sequence", 
-        "fee" => "Fee", 
         "fee" => "Fee", 
         "state" => "State", 
-        "state" => "State", 
-        "ledger" => "Ledger", 
         "ledger" => "Ledger", 
         "hash" => "Hash", 
-        "hash" => "Hash", 
-        "previous" => "Previous", 
         "previous" => "Previous"
     );
     

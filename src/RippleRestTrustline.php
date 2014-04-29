@@ -28,12 +28,8 @@ class RippleRestTrustline extends RippleRestObject {
      */
     protected static $__properties = array(
         "account" => "Account", 
-        "account" => "Account", 
-        "counterparty" => "Counterparty", 
         "counterparty" => "Counterparty", 
         "currency" => "Currency", 
-        "currency" => "Currency", 
-        "limit" => "Limit", 
         "limit" => "Limit", 
         "reciprocated_limit" => "ReciprocatedLimit", 
         "reciprocatedlimit" => "ReciprocatedLimit", 
@@ -46,10 +42,7 @@ class RippleRestTrustline extends RippleRestObject {
         "counterparty_allows_rippling" => "CounterpartyAllowsRippling", 
         "counterpartyallowsrippling" => "CounterpartyAllowsRippling", 
         "ledger" => "Ledger", 
-        "ledger" => "Ledger", 
         "hash" => "Hash", 
-        "hash" => "Hash", 
-        "previous" => "Previous", 
         "previous" => "Previous"
     );
     

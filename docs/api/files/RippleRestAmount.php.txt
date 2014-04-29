@@ -20,12 +20,8 @@ class RippleRestAmount extends RippleRestObject {
      */
     protected static $__properties = array(
         "value" => "Value", 
-        "value" => "Value", 
-        "currency" => "Currency", 
         "currency" => "Currency", 
         "issuer" => "Issuer", 
-        "issuer" => "Issuer", 
-        "counterparty" => "Counterparty", 
         "counterparty" => "Counterparty"
     );
     

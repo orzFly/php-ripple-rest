@@ -170,7 +170,7 @@ class RippleRest#{key} extends RippleRestObject {
               "#{i.downcase.inspect} => #{i.camel_case.inspect}",
               "#{i.camel_case.downcase.inspect} => #{i.camel_case.inspect}"
             ]
-          }.flatten.join(", \n        ")
+          }.flatten.uniq.join(", \n        ")
         }
     );
     

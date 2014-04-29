@@ -19,10 +19,7 @@ class RippleRestBalance extends RippleRestObject {
      */
     protected static $__properties = array(
         "value" => "Value", 
-        "value" => "Value", 
         "currency" => "Currency", 
-        "currency" => "Currency", 
-        "counterparty" => "Counterparty", 
         "counterparty" => "Counterparty"
     );
     
