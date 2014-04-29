@@ -1,0 +1,13 @@
+<?php
+/**
+ * Contains class RippleRestClientURLFopen
+ *
+ * @license MIT
+ */
+ 
+/**
+ * A REST Client depends on `allow_url_fopen=true` in `php.ini`.
+ */
+class RippleRestClientURLFopen extends RippleRestClient {
+
+}

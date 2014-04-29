@@ -289,8 +289,6 @@ EOF
   io.close
 end
 
-
-
 open "src/RippleRestObject.php", "w" do |io|
   io.puts <<EOF
 <?php
