@@ -1,0 +1,914 @@
+<?php
+/**
+ * Contains class RippleRestOrder
+ *
+ * @license MIT
+ */
+
+
+/**
+ * A simplified Order object used by the ripple-rest API (note that "orders" are referred to elsewhere in the Ripple protocol as "offers")
+ * @property string $account (RippleAddress) The Ripple account address of the order's creator
+ * @property boolean $buy If set to true the order it indicates that the creator is looking to receive the base_amount in exchange for the counter_amount. If undefined or set to false it indicates that the creator is looking to sell the base_amount to receive the counter_amount
+ * @property RippleRestAmount $baseAmount The amount of currency the seller_account is seeking to buy. If other orders take part of this one, this value will change to represent the amount left in the order. This may be specified along with the counter_amount OR exchange_rate but not both. When the order is parsed from the Ripple Ledger the base currency will be determined according to the Priority Ranking of Currencies (XRP,EUR,GBP,AUD,NZD,USD,CAD,CHF,JPY,CNY) and if neither currency is listed in the ranking the base currency will be the one that is alphabetically first
+ * @property RippleRestAmount $counterAmount The amount of currency being sold. If other orders take part of this one, this value will change to represent the amount left in the order. This may be specified along with the base_amount OR the exchange_rate but not both
+ * @property string $exchangeRate (FloatString) A string representation of the order price, defined as the cost one unit of the base currency in terms of the counter currency. This may be specified along with the base_amount OR the counter_amount but not both. If it is unspecified it will be computed automatically based on the counter_amount divided by the base_amount
+ * @property string $expirationTimestamp (Timestamp) The ISO combined date and time string representing the point beyond which the order will no longer be considered active or valid
+ * @property string $ledgerTimeout (`/^[0-9]*$/`) A string representation of the number of ledger closes after submission during which the order should be considered active
+ * @property boolean $immediateOrCancel If set to true this order will only take orders that are available at the time of execution and will not create an entry in the Ripple Ledger
+ * @property boolean $fillOrKill If set to true this order will only take orders that fill the base_amount and are available at the time of execution and will not create an entry in the Ripple Ledger
+ * @property boolean $maximizeBuyOrSell If set to true and it is a buy order it will buy up to the base_amount even if the counter_amount is exceeded, if it is a sell order it will sell up to the counter_amount even if the base_amount is exceeded
+ * @property string $cancelReplace (`/^d*$/`) If this is set to the sequence number of an outstanding order, that order will be cancelled and replaced with this one
+ * @property string $sequence (`/^[0-9]*$/`) The sequence number of this order from the perspective of the seller_account. The seller_account and the sequence number uniquely identify the order in the Ripple Ledger
+ * @property string $fee (FloatString) The Ripple Network transaction fee, represented in whole XRP (NOT "drops", or millionths of an XRP, which is used elsewhere in the Ripple protocol) used to create the order
+ * @property string $state (`/^active|validated|filled|cancelled|expired|failed$/`) If the order is active the state will be "active". If this object represents a historical order the state will be "validated", "filled" if the order was removed because it was fully filled, "cancelled" if it was deleted by the owner, "expired" if it reached the expiration_timestamp, or "failed" if there was an error with the initial attempt to place the order
+ * @property string $ledger (`/^[0-9]+$/`) The string representation of the index number of the ledger containing this order or, in the case of historical queries, of the transaction that modified this Order. 
+ * @property string $hash (Hash256) When returned as the result of a historical query this will be the hash of Ripple transaction that created, modified, or deleted this order. The transaction hash is used throughout the Ripple Protocol to uniquely identify a particular transaction
+ * @property RippleRestOrder $previous If the order was modified or partially filled this will be a full Order object. If the previous object also had a previous object that will be removed to reduce data complexity. Order changes can be walked backwards by querying the API for previous.hash repeatedly
+
+ */
+class RippleRestOrder extends RippleRestObject {
+    /**
+     * @internal
+     */
+    protected static $__properties = array(
+        "account" => "Account", 
+        "buy" => "Buy", 
+        "base_amount" => "BaseAmount", 
+        "baseamount" => "BaseAmount", 
+        "counter_amount" => "CounterAmount", 
+        "counteramount" => "CounterAmount", 
+        "exchange_rate" => "ExchangeRate", 
+        "exchangerate" => "ExchangeRate", 
+        "expiration_timestamp" => "ExpirationTimestamp", 
+        "expirationtimestamp" => "ExpirationTimestamp", 
+        "ledger_timeout" => "LedgerTimeout", 
+        "ledgertimeout" => "LedgerTimeout", 
+        "immediate_or_cancel" => "ImmediateOrCancel", 
+        "immediateorcancel" => "ImmediateOrCancel", 
+        "fill_or_kill" => "FillOrKill", 
+        "fillorkill" => "FillOrKill", 
+        "maximize_buy_or_sell" => "MaximizeBuyOrSell", 
+        "maximizebuyorsell" => "MaximizeBuyOrSell", 
+        "cancel_replace" => "CancelReplace", 
+        "cancelreplace" => "CancelReplace", 
+        "sequence" => "Sequence", 
+        "fee" => "Fee", 
+        "state" => "State", 
+        "ledger" => "Ledger", 
+        "hash" => "Hash", 
+        "previous" => "Previous"
+    );
+    
+    /**
+     * Pattern Rule for field `RippleRestOrder::$ledgerTimeout`
+     * @see RippleRestOrder::$ledgerTimeout
+     * @see RippleRestOrder::setLedgerTimeout
+     * @see RippleRestOrder::getLedgerTimeout
+     */
+    const PATTERN_LEDGER_TIMEOUT = "^[0-9]*$";
+    
+    /**
+     * Pattern Rule for field `RippleRestOrder::$cancelReplace`
+     * @see RippleRestOrder::$cancelReplace
+     * @see RippleRestOrder::setCancelReplace
+     * @see RippleRestOrder::getCancelReplace
+     */
+    const PATTERN_CANCEL_REPLACE = "^d*$";
+    
+    /**
+     * Pattern Rule for field `RippleRestOrder::$sequence`
+     * @see RippleRestOrder::$sequence
+     * @see RippleRestOrder::setSequence
+     * @see RippleRestOrder::getSequence
+     */
+    const PATTERN_SEQUENCE = "^[0-9]*$";
+    
+    /**
+     * Pattern Rule for field `RippleRestOrder::$state`
+     * @see RippleRestOrder::$state
+     * @see RippleRestOrder::setState
+     * @see RippleRestOrder::getState
+     */
+    const PATTERN_STATE = "^active|validated|filled|cancelled|expired|failed$";
+    
+    /**
+     * Pattern Rule for field `RippleRestOrder::$ledger`
+     * @see RippleRestOrder::$ledger
+     * @see RippleRestOrder::setLedger
+     * @see RippleRestOrder::getLedger
+     */
+    const PATTERN_LEDGER = "^[0-9]+$";
+    
+
+    
+    /**
+     * @internal
+     */
+    protected $__data = array();
+    
+    /**
+     * @internal
+     */
+    public function __set($name, $value)
+    {
+        if (isset(self::$__properties[strtolower($name)]))
+        {
+            $key = "set" . self::$__properties[strtolower($name)];
+            return $this->$key($value);
+        }
+        else
+        {
+            return $this->__data[$name] = $value;
+        }
+    }
+
+    /**
+     * @internal
+     */
+    public function __get($name)
+    {
+        if (isset(self::$__properties[strtolower($name)]))
+        {
+            $key = "get" . self::$__properties[strtolower($name)];
+            return $this->$key();
+        }
+        else
+        {
+            if (array_key_exists($name, $this->__data)) {
+                return $this->data[$name];
+            }
+
+            $trace = debug_backtrace();
+            trigger_error(
+                'Undefined property via __get(): ' . $name .
+                ' in ' . $trace[0]['file'] .
+                ' on line ' . $trace[0]['line'],
+                E_USER_NOTICE);
+            return null;
+        }
+    }
+
+    /**
+     * @internal
+     */
+    public function __isset($name)
+    {
+        if (isset(self::$__properties[strtolower($name)]))
+        {
+            return true;
+        }
+        return isset($this->__data[$name]);
+    }
+
+    /**
+     * @internal
+     */
+    public function __unset($name)
+    {
+        if (isset(self::$__properties[strtolower($name)]))
+        {
+            $key = "set" . self::$__properties[strtolower($name)];
+            return $this->$key(null);
+        }
+        unset($this->__data[$name]);
+    }
+    
+    /**
+     * Create a new instance of RippleRestOrder.
+     * @param array $data (defaults to `null`) PHP Array (result of `json_decode($json, true)`)
+     * @return RippleRestOrder
+     */
+    public function __construct($data = null) 
+    {
+        if (is_array($data))
+        {
+            foreach($data as $name => $value)
+            {
+                if (isset(self::$__properties[strtolower($name)]))
+                {
+                    $key = "init" . self::$__properties[strtolower($name)];
+                    $this->$key($value);
+                }
+                else
+                {
+                    $this->__data[$name] = $value;
+                }
+            }
+        }
+    }
+    
+    
+    /**
+     * @internal
+     */
+    protected $_Account;
+    
+    /**
+     * The Ripple account address of the order's creator
+     * @see RippleRestOrder::$account
+     * @see RippleRestOrder::setAccount
+     * @return string (RippleAddress) 
+     */
+    public function getAccount() {
+        return $this->_Account;
+    }
+    
+    /**
+     * The Ripple account address of the order's creator
+     * @see RippleRestOrder::$account
+     * @see RippleRestOrder::getAccount
+     * @param string $value (RippleAddress) 
+     * @return null
+     */
+    public function setAccount($value) {
+        try {
+            if (!self::_checkRippleAddress($value)) throw new Exception("");
+            $this->_Account = self::_fromRippleAddress($value);
+        } catch(Exception $e) {
+            throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
+        }
+    }
+    
+    /**
+     * @internal
+     */
+    protected function initAccount($value) {
+        $this->_Account = self::_fromRippleAddress($value);
+    }
+    
+    /**
+     * @internal
+     */
+    protected $_Buy;
+    
+    /**
+     * If set to true the order it indicates that the creator is looking to receive the base_amount in exchange for the counter_amount. If undefined or set to false it indicates that the creator is looking to sell the base_amount to receive the counter_amount
+     * @see RippleRestOrder::$buy
+     * @see RippleRestOrder::setBuy
+     * @return boolean 
+     */
+    public function getBuy() {
+        return $this->_Buy;
+    }
+    
+    /**
+     * If set to true the order it indicates that the creator is looking to receive the base_amount in exchange for the counter_amount. If undefined or set to false it indicates that the creator is looking to sell the base_amount to receive the counter_amount
+     * @see RippleRestOrder::$buy
+     * @see RippleRestOrder::getBuy
+     * @param boolean $value 
+     * @return null
+     */
+    public function setBuy($value) {
+        try {
+            if (!self::_checkBoolean($value)) throw new Exception("");
+            $this->_Buy = self::_fromBoolean($value);
+        } catch(Exception $e) {
+            throw new Exception("Cannot convert " . ((string)$value) . " to " . "boolean");
+        }
+    }
+    
+    /**
+     * @internal
+     */
+    protected function initBuy($value) {
+        $this->_Buy = self::_fromBoolean($value);
+    }
+    
+    /**
+     * @internal
+     */
+    protected $_BaseAmount;
+    
+    /**
+     * The amount of currency the seller_account is seeking to buy. If other orders take part of this one, this value will change to represent the amount left in the order. This may be specified along with the counter_amount OR exchange_rate but not both. When the order is parsed from the Ripple Ledger the base currency will be determined according to the Priority Ranking of Currencies (XRP,EUR,GBP,AUD,NZD,USD,CAD,CHF,JPY,CNY) and if neither currency is listed in the ranking the base currency will be the one that is alphabetically first
+     * @see RippleRestOrder::$baseAmount
+     * @see RippleRestOrder::setBaseAmount
+     * @return RippleRestAmount 
+     */
+    public function getBaseAmount() {
+        return $this->_BaseAmount;
+    }
+    
+    /**
+     * The amount of currency the seller_account is seeking to buy. If other orders take part of this one, this value will change to represent the amount left in the order. This may be specified along with the counter_amount OR exchange_rate but not both. When the order is parsed from the Ripple Ledger the base currency will be determined according to the Priority Ranking of Currencies (XRP,EUR,GBP,AUD,NZD,USD,CAD,CHF,JPY,CNY) and if neither currency is listed in the ranking the base currency will be the one that is alphabetically first
+     * @see RippleRestOrder::$baseAmount
+     * @see RippleRestOrder::getBaseAmount
+     * @param RippleRestAmount $value 
+     * @return null
+     */
+    public function setBaseAmount($value) {
+        try {
+            if (!self::_checkAmount($value)) throw new Exception("");
+            $this->_BaseAmount = self::_fromAmount($value);
+        } catch(Exception $e) {
+            throw new Exception("Cannot convert " . ((string)$value) . " to " . "RippleRestAmount");
+        }
+    }
+    
+    /**
+     * @internal
+     */
+    protected function initBaseAmount($value) {
+        $this->_BaseAmount = self::_fromAmount($value);
+    }
+    
+    /**
+     * @internal
+     */
+    protected $_CounterAmount;
+    
+    /**
+     * The amount of currency being sold. If other orders take part of this one, this value will change to represent the amount left in the order. This may be specified along with the base_amount OR the exchange_rate but not both
+     * @see RippleRestOrder::$counterAmount
+     * @see RippleRestOrder::setCounterAmount
+     * @return RippleRestAmount 
+     */
+    public function getCounterAmount() {
+        return $this->_CounterAmount;
+    }
+    
+    /**
+     * The amount of currency being sold. If other orders take part of this one, this value will change to represent the amount left in the order. This may be specified along with the base_amount OR the exchange_rate but not both
+     * @see RippleRestOrder::$counterAmount
+     * @see RippleRestOrder::getCounterAmount
+     * @param RippleRestAmount $value 
+     * @return null
+     */
+    public function setCounterAmount($value) {
+        try {
+            if (!self::_checkAmount($value)) throw new Exception("");
+            $this->_CounterAmount = self::_fromAmount($value);
+        } catch(Exception $e) {
+            throw new Exception("Cannot convert " . ((string)$value) . " to " . "RippleRestAmount");
+        }
+    }
+    
+    /**
+     * @internal
+     */
+    protected function initCounterAmount($value) {
+        $this->_CounterAmount = self::_fromAmount($value);
+    }
+    
+    /**
+     * @internal
+     */
+    protected $_ExchangeRate;
+    
+    /**
+     * A string representation of the order price, defined as the cost one unit of the base currency in terms of the counter currency. This may be specified along with the base_amount OR the counter_amount but not both. If it is unspecified it will be computed automatically based on the counter_amount divided by the base_amount
+     * @see RippleRestOrder::$exchangeRate
+     * @see RippleRestOrder::setExchangeRate
+     * @return string (FloatString) 
+     */
+    public function getExchangeRate() {
+        return $this->_ExchangeRate;
+    }
+    
+    /**
+     * A string representation of the order price, defined as the cost one unit of the base currency in terms of the counter currency. This may be specified along with the base_amount OR the counter_amount but not both. If it is unspecified it will be computed automatically based on the counter_amount divided by the base_amount
+     * @see RippleRestOrder::$exchangeRate
+     * @see RippleRestOrder::getExchangeRate
+     * @param string $value (FloatString) 
+     * @return null
+     */
+    public function setExchangeRate($value) {
+        try {
+            if (!self::_checkFloatString($value)) throw new Exception("");
+            $this->_ExchangeRate = self::_fromFloatString($value);
+        } catch(Exception $e) {
+            throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
+        }
+    }
+    
+    /**
+     * @internal
+     */
+    protected function initExchangeRate($value) {
+        $this->_ExchangeRate = self::_fromFloatString($value);
+    }
+    
+    /**
+     * @internal
+     */
+    protected $_ExpirationTimestamp;
+    
+    /**
+     * The ISO combined date and time string representing the point beyond which the order will no longer be considered active or valid
+     * @see RippleRestOrder::$expirationTimestamp
+     * @see RippleRestOrder::setExpirationTimestamp
+     * @return string (Timestamp) 
+     */
+    public function getExpirationTimestamp() {
+        return $this->_ExpirationTimestamp;
+    }
+    
+    /**
+     * The ISO combined date and time string representing the point beyond which the order will no longer be considered active or valid
+     * @see RippleRestOrder::$expirationTimestamp
+     * @see RippleRestOrder::getExpirationTimestamp
+     * @param string $value (Timestamp) 
+     * @return null
+     */
+    public function setExpirationTimestamp($value) {
+        try {
+            if (!self::_checkTimestamp($value)) throw new Exception("");
+            $this->_ExpirationTimestamp = self::_fromTimestamp($value);
+        } catch(Exception $e) {
+            throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
+        }
+    }
+    
+    /**
+     * @internal
+     */
+    protected function initExpirationTimestamp($value) {
+        $this->_ExpirationTimestamp = self::_fromTimestamp($value);
+    }
+    
+    /**
+     * @internal
+     */
+    protected $_LedgerTimeout;
+    
+    /**
+     * A string representation of the number of ledger closes after submission during which the order should be considered active
+     * @see RippleRestOrder::$ledgerTimeout
+     * @see RippleRestOrder::setLedgerTimeout
+     * @return string (`/^[0-9]*$/`) 
+     */
+    public function getLedgerTimeout() {
+        return $this->_LedgerTimeout;
+    }
+    
+    /**
+     * A string representation of the number of ledger closes after submission during which the order should be considered active
+     * @see RippleRestOrder::$ledgerTimeout
+     * @see RippleRestOrder::getLedgerTimeout
+     * @param string $value (`/^[0-9]*$/`) 
+     * @return null
+     */
+    public function setLedgerTimeout($value) {
+        try {
+            if (!self::_checkStringPattern($value, self::PATTERN_LEDGER_TIMEOUT)) throw new Exception("");
+            $this->_LedgerTimeout = self::_fromStringPattern($value, self::PATTERN_LEDGER_TIMEOUT);
+        } catch(Exception $e) {
+            throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
+        }
+    }
+    
+    /**
+     * @internal
+     */
+    protected function initLedgerTimeout($value) {
+        $this->_LedgerTimeout = self::_fromStringPattern($value, self::PATTERN_LEDGER_TIMEOUT);
+    }
+    
+    /**
+     * @internal
+     */
+    protected $_ImmediateOrCancel;
+    
+    /**
+     * If set to true this order will only take orders that are available at the time of execution and will not create an entry in the Ripple Ledger
+     * @see RippleRestOrder::$immediateOrCancel
+     * @see RippleRestOrder::setImmediateOrCancel
+     * @return boolean 
+     */
+    public function getImmediateOrCancel() {
+        return $this->_ImmediateOrCancel;
+    }
+    
+    /**
+     * If set to true this order will only take orders that are available at the time of execution and will not create an entry in the Ripple Ledger
+     * @see RippleRestOrder::$immediateOrCancel
+     * @see RippleRestOrder::getImmediateOrCancel
+     * @param boolean $value 
+     * @return null
+     */
+    public function setImmediateOrCancel($value) {
+        try {
+            if (!self::_checkBoolean($value)) throw new Exception("");
+            $this->_ImmediateOrCancel = self::_fromBoolean($value);
+        } catch(Exception $e) {
+            throw new Exception("Cannot convert " . ((string)$value) . " to " . "boolean");
+        }
+    }
+    
+    /**
+     * @internal
+     */
+    protected function initImmediateOrCancel($value) {
+        $this->_ImmediateOrCancel = self::_fromBoolean($value);
+    }
+    
+    /**
+     * @internal
+     */
+    protected $_FillOrKill;
+    
+    /**
+     * If set to true this order will only take orders that fill the base_amount and are available at the time of execution and will not create an entry in the Ripple Ledger
+     * @see RippleRestOrder::$fillOrKill
+     * @see RippleRestOrder::setFillOrKill
+     * @return boolean 
+     */
+    public function getFillOrKill() {
+        return $this->_FillOrKill;
+    }
+    
+    /**
+     * If set to true this order will only take orders that fill the base_amount and are available at the time of execution and will not create an entry in the Ripple Ledger
+     * @see RippleRestOrder::$fillOrKill
+     * @see RippleRestOrder::getFillOrKill
+     * @param boolean $value 
+     * @return null
+     */
+    public function setFillOrKill($value) {
+        try {
+            if (!self::_checkBoolean($value)) throw new Exception("");
+            $this->_FillOrKill = self::_fromBoolean($value);
+        } catch(Exception $e) {
+            throw new Exception("Cannot convert " . ((string)$value) . " to " . "boolean");
+        }
+    }
+    
+    /**
+     * @internal
+     */
+    protected function initFillOrKill($value) {
+        $this->_FillOrKill = self::_fromBoolean($value);
+    }
+    
+    /**
+     * @internal
+     */
+    protected $_MaximizeBuyOrSell;
+    
+    /**
+     * If set to true and it is a buy order it will buy up to the base_amount even if the counter_amount is exceeded, if it is a sell order it will sell up to the counter_amount even if the base_amount is exceeded
+     * @see RippleRestOrder::$maximizeBuyOrSell
+     * @see RippleRestOrder::setMaximizeBuyOrSell
+     * @return boolean 
+     */
+    public function getMaximizeBuyOrSell() {
+        return $this->_MaximizeBuyOrSell;
+    }
+    
+    /**
+     * If set to true and it is a buy order it will buy up to the base_amount even if the counter_amount is exceeded, if it is a sell order it will sell up to the counter_amount even if the base_amount is exceeded
+     * @see RippleRestOrder::$maximizeBuyOrSell
+     * @see RippleRestOrder::getMaximizeBuyOrSell
+     * @param boolean $value 
+     * @return null
+     */
+    public function setMaximizeBuyOrSell($value) {
+        try {
+            if (!self::_checkBoolean($value)) throw new Exception("");
+            $this->_MaximizeBuyOrSell = self::_fromBoolean($value);
+        } catch(Exception $e) {
+            throw new Exception("Cannot convert " . ((string)$value) . " to " . "boolean");
+        }
+    }
+    
+    /**
+     * @internal
+     */
+    protected function initMaximizeBuyOrSell($value) {
+        $this->_MaximizeBuyOrSell = self::_fromBoolean($value);
+    }
+    
+    /**
+     * @internal
+     */
+    protected $_CancelReplace;
+    
+    /**
+     * If this is set to the sequence number of an outstanding order, that order will be cancelled and replaced with this one
+     * @see RippleRestOrder::$cancelReplace
+     * @see RippleRestOrder::setCancelReplace
+     * @return string (`/^d*$/`) 
+     */
+    public function getCancelReplace() {
+        return $this->_CancelReplace;
+    }
+    
+    /**
+     * If this is set to the sequence number of an outstanding order, that order will be cancelled and replaced with this one
+     * @see RippleRestOrder::$cancelReplace
+     * @see RippleRestOrder::getCancelReplace
+     * @param string $value (`/^d*$/`) 
+     * @return null
+     */
+    public function setCancelReplace($value) {
+        try {
+            if (!self::_checkStringPattern($value, self::PATTERN_CANCEL_REPLACE)) throw new Exception("");
+            $this->_CancelReplace = self::_fromStringPattern($value, self::PATTERN_CANCEL_REPLACE);
+        } catch(Exception $e) {
+            throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
+        }
+    }
+    
+    /**
+     * @internal
+     */
+    protected function initCancelReplace($value) {
+        $this->_CancelReplace = self::_fromStringPattern($value, self::PATTERN_CANCEL_REPLACE);
+    }
+    
+    /**
+     * @internal
+     */
+    protected $_Sequence;
+    
+    /**
+     * The sequence number of this order from the perspective of the seller_account. The seller_account and the sequence number uniquely identify the order in the Ripple Ledger
+     * @see RippleRestOrder::$sequence
+     * @see RippleRestOrder::setSequence
+     * @return string (`/^[0-9]*$/`) 
+     */
+    public function getSequence() {
+        return $this->_Sequence;
+    }
+    
+    /**
+     * The sequence number of this order from the perspective of the seller_account. The seller_account and the sequence number uniquely identify the order in the Ripple Ledger
+     * @see RippleRestOrder::$sequence
+     * @see RippleRestOrder::getSequence
+     * @param string $value (`/^[0-9]*$/`) 
+     * @return null
+     */
+    public function setSequence($value) {
+        try {
+            if (!self::_checkStringPattern($value, self::PATTERN_SEQUENCE)) throw new Exception("");
+            $this->_Sequence = self::_fromStringPattern($value, self::PATTERN_SEQUENCE);
+        } catch(Exception $e) {
+            throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
+        }
+    }
+    
+    /**
+     * @internal
+     */
+    protected function initSequence($value) {
+        $this->_Sequence = self::_fromStringPattern($value, self::PATTERN_SEQUENCE);
+    }
+    
+    /**
+     * @internal
+     */
+    protected $_Fee;
+    
+    /**
+     * The Ripple Network transaction fee, represented in whole XRP (NOT "drops", or millionths of an XRP, which is used elsewhere in the Ripple protocol) used to create the order
+     * @see RippleRestOrder::$fee
+     * @see RippleRestOrder::setFee
+     * @return string (FloatString) 
+     */
+    public function getFee() {
+        return $this->_Fee;
+    }
+    
+    /**
+     * The Ripple Network transaction fee, represented in whole XRP (NOT "drops", or millionths of an XRP, which is used elsewhere in the Ripple protocol) used to create the order
+     * @see RippleRestOrder::$fee
+     * @see RippleRestOrder::getFee
+     * @param string $value (FloatString) 
+     * @return null
+     */
+    public function setFee($value) {
+        try {
+            if (!self::_checkFloatString($value)) throw new Exception("");
+            $this->_Fee = self::_fromFloatString($value);
+        } catch(Exception $e) {
+            throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
+        }
+    }
+    
+    /**
+     * @internal
+     */
+    protected function initFee($value) {
+        $this->_Fee = self::_fromFloatString($value);
+    }
+    
+    /**
+     * @internal
+     */
+    protected $_State;
+    
+    /**
+     * If the order is active the state will be "active". If this object represents a historical order the state will be "validated", "filled" if the order was removed because it was fully filled, "cancelled" if it was deleted by the owner, "expired" if it reached the expiration_timestamp, or "failed" if there was an error with the initial attempt to place the order
+     * @see RippleRestOrder::$state
+     * @see RippleRestOrder::setState
+     * @return string (`/^active|validated|filled|cancelled|expired|failed$/`) 
+     */
+    public function getState() {
+        return $this->_State;
+    }
+    
+    /**
+     * If the order is active the state will be "active". If this object represents a historical order the state will be "validated", "filled" if the order was removed because it was fully filled, "cancelled" if it was deleted by the owner, "expired" if it reached the expiration_timestamp, or "failed" if there was an error with the initial attempt to place the order
+     * @see RippleRestOrder::$state
+     * @see RippleRestOrder::getState
+     * @param string $value (`/^active|validated|filled|cancelled|expired|failed$/`) 
+     * @return null
+     */
+    public function setState($value) {
+        try {
+            if (!self::_checkStringPattern($value, self::PATTERN_STATE)) throw new Exception("");
+            $this->_State = self::_fromStringPattern($value, self::PATTERN_STATE);
+        } catch(Exception $e) {
+            throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
+        }
+    }
+    
+    /**
+     * @internal
+     */
+    protected function initState($value) {
+        $this->_State = self::_fromStringPattern($value, self::PATTERN_STATE);
+    }
+    
+    /**
+     * @internal
+     */
+    protected $_Ledger;
+    
+    /**
+     * The string representation of the index number of the ledger containing this order or, in the case of historical queries, of the transaction that modified this Order. 
+     * @see RippleRestOrder::$ledger
+     * @see RippleRestOrder::setLedger
+     * @return string (`/^[0-9]+$/`) 
+     */
+    public function getLedger() {
+        return $this->_Ledger;
+    }
+    
+    /**
+     * The string representation of the index number of the ledger containing this order or, in the case of historical queries, of the transaction that modified this Order. 
+     * @see RippleRestOrder::$ledger
+     * @see RippleRestOrder::getLedger
+     * @param string $value (`/^[0-9]+$/`) 
+     * @return null
+     */
+    public function setLedger($value) {
+        try {
+            if (!self::_checkStringPattern($value, self::PATTERN_LEDGER)) throw new Exception("");
+            $this->_Ledger = self::_fromStringPattern($value, self::PATTERN_LEDGER);
+        } catch(Exception $e) {
+            throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
+        }
+    }
+    
+    /**
+     * @internal
+     */
+    protected function initLedger($value) {
+        $this->_Ledger = self::_fromStringPattern($value, self::PATTERN_LEDGER);
+    }
+    
+    /**
+     * @internal
+     */
+    protected $_Hash;
+    
+    /**
+     * When returned as the result of a historical query this will be the hash of Ripple transaction that created, modified, or deleted this order. The transaction hash is used throughout the Ripple Protocol to uniquely identify a particular transaction
+     * @see RippleRestOrder::$hash
+     * @see RippleRestOrder::setHash
+     * @return string (Hash256) 
+     */
+    public function getHash() {
+        return $this->_Hash;
+    }
+    
+    /**
+     * When returned as the result of a historical query this will be the hash of Ripple transaction that created, modified, or deleted this order. The transaction hash is used throughout the Ripple Protocol to uniquely identify a particular transaction
+     * @see RippleRestOrder::$hash
+     * @see RippleRestOrder::getHash
+     * @param string $value (Hash256) 
+     * @return null
+     */
+    public function setHash($value) {
+        try {
+            if (!self::_checkHash256($value)) throw new Exception("");
+            $this->_Hash = self::_fromHash256($value);
+        } catch(Exception $e) {
+            throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
+        }
+    }
+    
+    /**
+     * @internal
+     */
+    protected function initHash($value) {
+        $this->_Hash = self::_fromHash256($value);
+    }
+    
+    /**
+     * @internal
+     */
+    protected $_Previous;
+    
+    /**
+     * If the order was modified or partially filled this will be a full Order object. If the previous object also had a previous object that will be removed to reduce data complexity. Order changes can be walked backwards by querying the API for previous.hash repeatedly
+     * @see RippleRestOrder::$previous
+     * @see RippleRestOrder::setPrevious
+     * @return RippleRestOrder 
+     */
+    public function getPrevious() {
+        return $this->_Previous;
+    }
+    
+    /**
+     * If the order was modified or partially filled this will be a full Order object. If the previous object also had a previous object that will be removed to reduce data complexity. Order changes can be walked backwards by querying the API for previous.hash repeatedly
+     * @see RippleRestOrder::$previous
+     * @see RippleRestOrder::getPrevious
+     * @param RippleRestOrder $value 
+     * @return null
+     */
+    public function setPrevious($value) {
+        try {
+            if (!self::_checkOrder($value)) throw new Exception("");
+            $this->_Previous = self::_fromOrder($value);
+        } catch(Exception $e) {
+            throw new Exception("Cannot convert " . ((string)$value) . " to " . "RippleRestOrder");
+        }
+    }
+    
+    /**
+     * @internal
+     */
+    protected function initPrevious($value) {
+        $this->_Previous = self::_fromOrder($value);
+    }
+
+
+    /**
+     * Convert this object to PHP native Array for serializing to JSON.
+     * @return array
+     */
+    public function toArray()
+    {
+        $array = array();
+    
+        $array["account"] = self::_toRippleAddress($this->_Account);
+        if (is_null($array["account"]))
+            throw new Exception("Field Account is required in RippleRestOrder");
+    
+        $array["buy"] = self::_toBoolean($this->_Buy);
+        if (is_null($array["buy"])) unset($array["buy"]);
+    
+        $array["base_amount"] = self::_toAmount($this->_BaseAmount);
+        if (is_null($array["base_amount"])) unset($array["base_amount"]);
+    
+        $array["counter_amount"] = self::_toAmount($this->_CounterAmount);
+        if (is_null($array["counter_amount"])) unset($array["counter_amount"]);
+    
+        $array["exchange_rate"] = self::_toFloatString($this->_ExchangeRate);
+        if (is_null($array["exchange_rate"])) unset($array["exchange_rate"]);
+    
+        $array["expiration_timestamp"] = self::_toTimestamp($this->_ExpirationTimestamp);
+        if (is_null($array["expiration_timestamp"])) unset($array["expiration_timestamp"]);
+    
+        $array["ledger_timeout"] = self::_toStringPattern($this->_LedgerTimeout, self::PATTERN_LEDGER_TIMEOUT);
+        if (is_null($array["ledger_timeout"])) unset($array["ledger_timeout"]);
+    
+        $array["immediate_or_cancel"] = self::_toBoolean($this->_ImmediateOrCancel);
+        if (is_null($array["immediate_or_cancel"])) unset($array["immediate_or_cancel"]);
+    
+        $array["fill_or_kill"] = self::_toBoolean($this->_FillOrKill);
+        if (is_null($array["fill_or_kill"])) unset($array["fill_or_kill"]);
+    
+        $array["maximize_buy_or_sell"] = self::_toBoolean($this->_MaximizeBuyOrSell);
+        if (is_null($array["maximize_buy_or_sell"])) unset($array["maximize_buy_or_sell"]);
+    
+        $array["cancel_replace"] = self::_toStringPattern($this->_CancelReplace, self::PATTERN_CANCEL_REPLACE);
+        if (is_null($array["cancel_replace"])) unset($array["cancel_replace"]);
+    
+        $array["sequence"] = self::_toStringPattern($this->_Sequence, self::PATTERN_SEQUENCE);
+        if (is_null($array["sequence"])) unset($array["sequence"]);
+    
+        $array["fee"] = self::_toFloatString($this->_Fee);
+        if (is_null($array["fee"])) unset($array["fee"]);
+    
+        $array["state"] = self::_toStringPattern($this->_State, self::PATTERN_STATE);
+        if (is_null($array["state"])) unset($array["state"]);
+    
+        $array["ledger"] = self::_toStringPattern($this->_Ledger, self::PATTERN_LEDGER);
+        if (is_null($array["ledger"])) unset($array["ledger"]);
+    
+        $array["hash"] = self::_toHash256($this->_Hash);
+        if (is_null($array["hash"])) unset($array["hash"]);
+    
+        $array["previous"] = self::_toOrder($this->_Previous);
+        if (is_null($array["previous"])) unset($array["previous"]);
+
+        return $array;
+    }
+
+
+}
+
