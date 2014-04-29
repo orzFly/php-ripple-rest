@@ -1009,3 +1009,4 @@ class RippleRestPayment extends RippleRestObject {
         return $array;
     }
 }
+

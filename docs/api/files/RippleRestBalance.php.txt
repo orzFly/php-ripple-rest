@@ -1,20 +1,19 @@
 <?php
 /**
- * Contains class RippleRestAmount
+ * Contains class RippleRestBalance
  *
  * @license MIT
  */
 
 
 /**
- * An Amount on the Ripple Protocol, used also for XRP in the ripple-rest API
+ * A simplified representation of an account Balance
  * @property string $value The quantity of the currency, denoted as a string to retain floating point precision
  * @property string $currency (Currency) The currency expressed as a three-character code
- * @property string $issuer (`/^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$/`) The Ripple account address of the currency's issuer or gateway, or an empty string if the currency is XRP
  * @property string $counterparty (`/^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$/`) The Ripple account address of the currency's issuer or gateway, or an empty string if the currency is XRP
 
  */
-class RippleRestAmount extends RippleRestObject {
+class RippleRestBalance extends RippleRestObject {
     /**
      * @internal
      */
@@ -23,8 +22,6 @@ class RippleRestAmount extends RippleRestObject {
         "value" => "Value", 
         "currency" => "Currency", 
         "currency" => "Currency", 
-        "issuer" => "Issuer", 
-        "issuer" => "Issuer", 
         "counterparty" => "Counterparty", 
         "counterparty" => "Counterparty"
     );
@@ -102,9 +99,9 @@ class RippleRestAmount extends RippleRestObject {
     }
     
     /**
-     * Create a new instance of RippleRestAmount.
+     * Create a new instance of RippleRestBalance.
      * @param array $data (defaults to `null`) PHP Array (result of `json_decode($json, true)`)
-     * @return RippleRestAmount
+     * @return RippleRestBalance
      */
     public function __construct($data = null) 
     {
@@ -133,8 +130,8 @@ class RippleRestAmount extends RippleRestObject {
     
     /**
      * The quantity of the currency, denoted as a string to retain floating point precision
-     * @see RippleRestAmount::$value
-     * @see RippleRestAmount::setValue
+     * @see RippleRestBalance::$value
+     * @see RippleRestBalance::setValue
      * @return string 
      */
     public function getValue() {
@@ -143,8 +140,8 @@ class RippleRestAmount extends RippleRestObject {
     
     /**
      * The quantity of the currency, denoted as a string to retain floating point precision
-     * @see RippleRestAmount::$value
-     * @see RippleRestAmount::getValue
+     * @see RippleRestBalance::$value
+     * @see RippleRestBalance::getValue
      * @param string $value 
      * @return null
      */
@@ -171,8 +168,8 @@ class RippleRestAmount extends RippleRestObject {
     
     /**
      * The currency expressed as a three-character code
-     * @see RippleRestAmount::$currency
-     * @see RippleRestAmount::setCurrency
+     * @see RippleRestBalance::$currency
+     * @see RippleRestBalance::setCurrency
      * @return string (Currency) 
      */
     public function getCurrency() {
@@ -181,8 +178,8 @@ class RippleRestAmount extends RippleRestObject {
     
     /**
      * The currency expressed as a three-character code
-     * @see RippleRestAmount::$currency
-     * @see RippleRestAmount::getCurrency
+     * @see RippleRestBalance::$currency
+     * @see RippleRestBalance::getCurrency
      * @param string $value (Currency) 
      * @return null
      */
@@ -205,50 +202,12 @@ class RippleRestAmount extends RippleRestObject {
     /**
      * @internal
      */
-    protected $_Issuer;
-    
-    /**
-     * The Ripple account address of the currency's issuer or gateway, or an empty string if the currency is XRP
-     * @see RippleRestAmount::$issuer
-     * @see RippleRestAmount::setIssuer
-     * @return string (`/^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$/`) 
-     */
-    public function getIssuer() {
-        return $this->_Issuer;
-    }
-    
-    /**
-     * The Ripple account address of the currency's issuer or gateway, or an empty string if the currency is XRP
-     * @see RippleRestAmount::$issuer
-     * @see RippleRestAmount::getIssuer
-     * @param string $value (`/^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$/`) 
-     * @return null
-     */
-    public function setIssuer($value) {
-        try {
-            if (!self::_checkStringPattern($value, "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$")) throw new Exception("");
-            $this->_Issuer = self::_fromStringPattern($value, "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$");
-        } catch(Exception $e) {
-            throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
-        }
-    }
-    
-    /**
-     * @internal
-     */
-    protected function initIssuer($value) {
-        $this->_Issuer = self::_fromStringPattern($value, "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$");
-    }
-    
-    /**
-     * @internal
-     */
     protected $_Counterparty;
     
     /**
      * The Ripple account address of the currency's issuer or gateway, or an empty string if the currency is XRP
-     * @see RippleRestAmount::$counterparty
-     * @see RippleRestAmount::setCounterparty
+     * @see RippleRestBalance::$counterparty
+     * @see RippleRestBalance::setCounterparty
      * @return string (`/^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$/`) 
      */
     public function getCounterparty() {
@@ -257,8 +216,8 @@ class RippleRestAmount extends RippleRestObject {
     
     /**
      * The Ripple account address of the currency's issuer or gateway, or an empty string if the currency is XRP
-     * @see RippleRestAmount::$counterparty
-     * @see RippleRestAmount::getCounterparty
+     * @see RippleRestBalance::$counterparty
+     * @see RippleRestBalance::getCounterparty
      * @param string $value (`/^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$/`) 
      * @return null
      */
@@ -289,14 +248,11 @@ class RippleRestAmount extends RippleRestObject {
     
         $array["value"] = self::_toString($this->_Value);
         if (is_null($array["value"]))
-            throw new Exception("Field Value is required in RippleRestAmount");
+            throw new Exception("Field Value is required in RippleRestBalance");
     
         $array["currency"] = self::_toCurrency($this->_Currency);
         if (is_null($array["currency"]))
-            throw new Exception("Field Currency is required in RippleRestAmount");
-    
-        $array["issuer"] = self::_toStringPattern($this->_Issuer, "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$");
-        if (is_null($array["issuer"])) unset($array["issuer"]);
+            throw new Exception("Field Currency is required in RippleRestBalance");
     
         $array["counterparty"] = self::_toStringPattern($this->_Counterparty, "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$");
         if (is_null($array["counterparty"])) unset($array["counterparty"]);
@@ -304,3 +260,4 @@ class RippleRestAmount extends RippleRestObject {
         return $array;
     }
 }
+

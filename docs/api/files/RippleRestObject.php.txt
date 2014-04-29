@@ -288,3 +288,4 @@ abstract class RippleRestObject {
      */
     abstract public function toArray();
 }
+
