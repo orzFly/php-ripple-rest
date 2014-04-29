@@ -33,7 +33,7 @@ abstract class RippleRestObject {
     /**
      * @internal
      */
-    protected static function _checkStringPattern($x, $pattern) { if(is_null($x)) return true; return (bool) preg_match((string) $x, '`' . $pattern .'`'); }
+    protected static function _checkStringPattern($x, $pattern) { if(is_null($x)) return true; return (bool) preg_match('`' . $pattern .'`', (string) $x); }
     
     /**
      * @internal
@@ -69,15 +69,15 @@ abstract class RippleRestObject {
     /**
      * @internal
      */
-    protected static function _toHash256($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_HASH256); }
+    protected static function _toHash256($x) { if(is_null($x)) return null; return self::_toStringPattern($x, self::PATTERN_TYPE_HASH256); }
     /**
      * @internal
      */
-    protected static function _fromHash256($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_HASH256); }
+    protected static function _fromHash256($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, self::PATTERN_TYPE_HASH256); }
     /**
      * @internal
      */
-    protected static function _checkHash256($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_HASH256); }
+    protected static function _checkHash256($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, self::PATTERN_TYPE_HASH256); }
     
     /**
      * The hex representation of a 128-bit hash
@@ -87,15 +87,15 @@ abstract class RippleRestObject {
     /**
      * @internal
      */
-    protected static function _toHash128($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_HASH128); }
+    protected static function _toHash128($x) { if(is_null($x)) return null; return self::_toStringPattern($x, self::PATTERN_TYPE_HASH128); }
     /**
      * @internal
      */
-    protected static function _fromHash128($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_HASH128); }
+    protected static function _fromHash128($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, self::PATTERN_TYPE_HASH128); }
     /**
      * @internal
      */
-    protected static function _checkHash128($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_HASH128); }
+    protected static function _checkHash128($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, self::PATTERN_TYPE_HASH128); }
     
     /**
      * An ISO 8601 combined date and time timestamp
@@ -105,15 +105,15 @@ abstract class RippleRestObject {
     /**
      * @internal
      */
-    protected static function _toTimestamp($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_TIMESTAMP); }
+    protected static function _toTimestamp($x) { if(is_null($x)) return null; return self::_toStringPattern($x, self::PATTERN_TYPE_TIMESTAMP); }
     /**
      * @internal
      */
-    protected static function _fromTimestamp($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_TIMESTAMP); }
+    protected static function _fromTimestamp($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, self::PATTERN_TYPE_TIMESTAMP); }
     /**
      * @internal
      */
-    protected static function _checkTimestamp($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_TIMESTAMP); }
+    protected static function _checkTimestamp($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, self::PATTERN_TYPE_TIMESTAMP); }
     
     /**
      * A Ripple account address
@@ -123,15 +123,15 @@ abstract class RippleRestObject {
     /**
      * @internal
      */
-    protected static function _toRippleAddress($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_RIPPLEADDRESS); }
+    protected static function _toRippleAddress($x) { if(is_null($x)) return null; return self::_toStringPattern($x, self::PATTERN_TYPE_RIPPLEADDRESS); }
     /**
      * @internal
      */
-    protected static function _fromRippleAddress($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_RIPPLEADDRESS); }
+    protected static function _fromRippleAddress($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, self::PATTERN_TYPE_RIPPLEADDRESS); }
     /**
      * @internal
      */
-    protected static function _checkRippleAddress($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_RIPPLEADDRESS); }
+    protected static function _checkRippleAddress($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, self::PATTERN_TYPE_RIPPLEADDRESS); }
     
     /**
      * A client-supplied unique identifier (ideally a UUID) for this transaction used to prevent duplicate payments and help confirm the transaction's final status. All ASCII printable characters are allowed. Note that 256-bit hex strings are disallowed because of the potential confusion with transaction hashes.
@@ -141,15 +141,15 @@ abstract class RippleRestObject {
     /**
      * @internal
      */
-    protected static function _toResourceId($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_RESOURCEID); }
+    protected static function _toResourceId($x) { if(is_null($x)) return null; return self::_toStringPattern($x, self::PATTERN_TYPE_RESOURCEID); }
     /**
      * @internal
      */
-    protected static function _fromResourceId($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_RESOURCEID); }
+    protected static function _fromResourceId($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, self::PATTERN_TYPE_RESOURCEID); }
     /**
      * @internal
      */
-    protected static function _checkResourceId($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_RESOURCEID); }
+    protected static function _checkResourceId($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, self::PATTERN_TYPE_RESOURCEID); }
     
     /**
      * A string representation of a floating point number
@@ -159,15 +159,15 @@ abstract class RippleRestObject {
     /**
      * @internal
      */
-    protected static function _toFloatString($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_FLOATSTRING); }
+    protected static function _toFloatString($x) { if(is_null($x)) return null; return self::_toStringPattern($x, self::PATTERN_TYPE_FLOATSTRING); }
     /**
      * @internal
      */
-    protected static function _fromFloatString($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_FLOATSTRING); }
+    protected static function _fromFloatString($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, self::PATTERN_TYPE_FLOATSTRING); }
     /**
      * @internal
      */
-    protected static function _checkFloatString($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_FLOATSTRING); }
+    protected static function _checkFloatString($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, self::PATTERN_TYPE_FLOATSTRING); }
     
     /**
      * A standard URL
@@ -177,15 +177,15 @@ abstract class RippleRestObject {
     /**
      * @internal
      */
-    protected static function _toURL($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_URL); }
+    protected static function _toURL($x) { if(is_null($x)) return null; return self::_toStringPattern($x, self::PATTERN_TYPE_URL); }
     /**
      * @internal
      */
-    protected static function _fromURL($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_URL); }
+    protected static function _fromURL($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, self::PATTERN_TYPE_URL); }
     /**
      * @internal
      */
-    protected static function _checkURL($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_URL); }
+    protected static function _checkURL($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, self::PATTERN_TYPE_URL); }
     
     /**
      * The three-character code or hex string used to denote currencies
@@ -195,15 +195,15 @@ abstract class RippleRestObject {
     /**
      * @internal
      */
-    protected static function _toCurrency($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_CURRENCY); }
+    protected static function _toCurrency($x) { if(is_null($x)) return null; return self::_toStringPattern($x, self::PATTERN_TYPE_CURRENCY); }
     /**
      * @internal
      */
-    protected static function _fromCurrency($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_CURRENCY); }
+    protected static function _fromCurrency($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, self::PATTERN_TYPE_CURRENCY); }
     /**
      * @internal
      */
-    protected static function _checkCurrency($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_CURRENCY); }
+    protected static function _checkCurrency($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, self::PATTERN_TYPE_CURRENCY); }
     
     /**
      * A string representation of an unsigned 32-bit integer (0-4294967295)
@@ -213,15 +213,15 @@ abstract class RippleRestObject {
     /**
      * @internal
      */
-    protected static function _toUINT32($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_UINT32); }
+    protected static function _toUINT32($x) { if(is_null($x)) return null; return self::_toStringPattern($x, self::PATTERN_TYPE_UINT32); }
     /**
      * @internal
      */
-    protected static function _fromUINT32($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_UINT32); }
+    protected static function _fromUINT32($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, self::PATTERN_TYPE_UINT32); }
     /**
      * @internal
      */
-    protected static function _checkUINT32($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_UINT32); }
+    protected static function _checkUINT32($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, self::PATTERN_TYPE_UINT32); }
     
     /**
      * @internal

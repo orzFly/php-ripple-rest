@@ -146,6 +146,54 @@ EOF
 EOF
     end
   end
+  
+  ext = nil
+
+  if key == "Amount"
+    ext = <<EOF
+
+    /**
+     * Converts to a string.
+     * @return string
+     */
+    public function toString()
+    {
+        $str = ((string)$this->value);
+        $str .= "+" . ((string)$this->currency);
+        if (strlen($this->issuer) > 0)
+          $str .= "+" . ((string)$this->issuer);
+          
+        return $str;
+    }
+
+    /**
+     * Convert a string to RippleRestAmount
+     * @param string $s a String like "1+XRP" or "1+USD+r..."
+     * @return RippleRestAmount
+     */
+    public static function fromString($s)
+    {
+        $arr = explode("+", $s);
+        
+        return new RippleRestAmount(array(
+            "value" => $arr[0],
+            "currency" => $arr[1],
+            "issuer" => isset($arr[2]) ? $arr[2] : null
+        ));
+    }
+EOF
+  end
+if key == "Payment"
+    ext = <<EOF
+
+    /**
+     * Client resource Id
+     * @return string
+     */
+    public $clientResourceId;
+EOF
+  end
+
 io.puts <<EOF
 <?php
 /**
@@ -284,6 +332,8 @@ class RippleRest#{key} extends RippleRestObject {
 #{to_array.string}
         return $array;
     }
+
+#{ext}
 }
 EOF
   io.close
@@ -326,7 +376,7 @@ abstract class RippleRestObject {
     /**
      * @internal
      */
-    protected static function _checkStringPattern($x, $pattern) { if(is_null($x)) return true; return (bool) preg_match((string) $x, '`' . $pattern .'`'); }
+    protected static function _checkStringPattern($x, $pattern) { if(is_null($x)) return true; return (bool) preg_match('`' . $pattern .'`', (string) $x); }
     
     /**
      * @internal
@@ -368,15 +418,15 @@ EOF
     /**
      * @internal
      */
-    protected static function _to#{key}($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_#{key.upcase}); }
+    protected static function _to#{key}($x) { if(is_null($x)) return null; return self::_toStringPattern($x, self::PATTERN_TYPE_#{key.upcase}); }
     /**
      * @internal
      */
-    protected static function _from#{key}($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_#{key.upcase}); }
+    protected static function _from#{key}($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, self::PATTERN_TYPE_#{key.upcase}); }
     /**
      * @internal
      */
-    protected static function _check#{key}($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_#{key.upcase}); }
+    protected static function _check#{key}($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, self::PATTERN_TYPE_#{key.upcase}); }
     
 EOF
   end

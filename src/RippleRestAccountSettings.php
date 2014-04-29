@@ -712,4 +712,6 @@ class RippleRestAccountSettings extends RippleRestObject {
 
         return $array;
     }
+
+
 }

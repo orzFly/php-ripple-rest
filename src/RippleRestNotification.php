@@ -643,4 +643,6 @@ class RippleRestNotification extends RippleRestObject {
 
         return $array;
     }
+
+
 }

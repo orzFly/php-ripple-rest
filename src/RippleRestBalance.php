@@ -266,4 +266,6 @@ class RippleRestBalance extends RippleRestObject {
 
         return $array;
     }
+
+
 }

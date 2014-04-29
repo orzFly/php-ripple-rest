@@ -658,4 +658,6 @@ class RippleRestTrustline extends RippleRestObject {
 
         return $array;
     }
+
+
 }

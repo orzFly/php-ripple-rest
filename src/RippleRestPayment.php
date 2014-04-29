@@ -1034,4 +1034,12 @@ class RippleRestPayment extends RippleRestObject {
 
         return $array;
     }
+
+
+    /**
+     * Client resource Id
+     * @return string
+     */
+    public $clientResourceId;
+
 }

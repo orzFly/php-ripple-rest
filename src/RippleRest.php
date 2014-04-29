@@ -70,7 +70,7 @@ class RippleRest {
      * @throws RippleRestError if RippleRest server returns an error
      * @throws RippleRestProtocolError if protocol is wrong or network is down
      */
-    public static function getUUID()
+    public static function createUUID()
     {
         $result = self::get("v1/uuid");
         return $result["uuid"];
@@ -108,7 +108,7 @@ class RippleRest {
     public static function post($uri, $body)
     {
         return self::wrapError(function() use($uri, $body) {
-            return self::getClient()->get(self::$endpoint . "/$uri", $body);
+            return self::getClient()->post(self::$endpoint . "/$uri", $body);
         });
     }
     
@@ -127,7 +127,9 @@ class RippleRest {
         $json = json_decode($response, true);
         if (!is_null($json) && !$json["success"])
         {
-            throw new RippleRestError($json["message"], 0, $json);
+            $ex = new RippleRestError(isset($json["message"]) ? $json["message"] : isset($json["error"]) ? $json["error"] : json_encode($json));
+            $ex->error = $json;
+            throw $ex;
         }
       
         return is_null($json) ? $response : $json;

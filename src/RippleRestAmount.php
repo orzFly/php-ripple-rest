@@ -317,4 +317,36 @@ class RippleRestAmount extends RippleRestObject {
 
         return $array;
     }
+
+
+    /**
+     * Converts to a string.
+     * @return string
+     */
+    public function toString()
+    {
+        $str = ((string)$this->value);
+        $str .= "+" . ((string)$this->currency);
+        if (strlen($this->issuer) > 0)
+          $str .= "+" . ((string)$this->issuer);
+          
+        return $str;
+    }
+
+    /**
+     * Convert a string to RippleRestAmount
+     * @param string $s a String like "1+XRP" or "1+USD+r..."
+     * @return RippleRestAmount
+     */
+    public static function fromString($s)
+    {
+        $arr = explode("+", $s);
+        
+        return new RippleRestAmount(array(
+            "value" => $arr[0],
+            "currency" => $arr[1],
+            "issuer" => isset($arr[2]) ? $arr[2] : null
+        ));
+    }
+
 }
