@@ -62,121 +62,166 @@ abstract class RippleRestObject {
     protected static function _checkFloat($x) { if(is_null($x)) return true; return true; }
 
     /**
-     * @internal
+     * The hex representation of a 256-bit hash
      */
-    protected static function _toHash256($x) { if(is_null($x)) return null; return self::_toStringPattern($x, "^$|^[A-Fa-f0-9]{64}$"); }
-    /**
-     * @internal
-     */
-    protected static function _fromHash256($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, "^$|^[A-Fa-f0-9]{64}$"); }
-    /**
-     * @internal
-     */
-    protected static function _checkHash256($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, "^$|^[A-Fa-f0-9]{64}$"); }
+    const PATTERN_TYPE_HASH256 = "^$|^[A-Fa-f0-9]{64}$";
     
     /**
      * @internal
      */
-    protected static function _toHash128($x) { if(is_null($x)) return null; return self::_toStringPattern($x, "^$|^[A-Fa-f0-9]{32}$"); }
+    protected static function _toHash256($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_HASH256); }
     /**
      * @internal
      */
-    protected static function _fromHash128($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, "^$|^[A-Fa-f0-9]{32}$"); }
+    protected static function _fromHash256($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_HASH256); }
     /**
      * @internal
      */
-    protected static function _checkHash128($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, "^$|^[A-Fa-f0-9]{32}$"); }
+    protected static function _checkHash256($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_HASH256); }
+    
+    /**
+     * The hex representation of a 128-bit hash
+     */
+    const PATTERN_TYPE_HASH128 = "^$|^[A-Fa-f0-9]{32}$";
     
     /**
      * @internal
      */
-    protected static function _toTimestamp($x) { if(is_null($x)) return null; return self::_toStringPattern($x, "^$|^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T(2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9](Z|[+](2[0-3]|[01][0-9]):[0-5][0-9])$"); }
+    protected static function _toHash128($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_HASH128); }
     /**
      * @internal
      */
-    protected static function _fromTimestamp($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, "^$|^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T(2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9](Z|[+](2[0-3]|[01][0-9]):[0-5][0-9])$"); }
+    protected static function _fromHash128($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_HASH128); }
     /**
      * @internal
      */
-    protected static function _checkTimestamp($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, "^$|^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T(2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9](Z|[+](2[0-3]|[01][0-9]):[0-5][0-9])$"); }
+    protected static function _checkHash128($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_HASH128); }
+    
+    /**
+     * An ISO 8601 combined date and time timestamp
+     */
+    const PATTERN_TYPE_TIMESTAMP = "^$|^[0-9]{4}-[0-1][0-9]-[0-3][0-9]T(2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9](Z|[+](2[0-3]|[01][0-9]):[0-5][0-9])$";
     
     /**
      * @internal
      */
-    protected static function _toRippleAddress($x) { if(is_null($x)) return null; return self::_toStringPattern($x, "^r[1-9A-HJ-NP-Za-km-z]{25,33}$"); }
+    protected static function _toTimestamp($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_TIMESTAMP); }
     /**
      * @internal
      */
-    protected static function _fromRippleAddress($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, "^r[1-9A-HJ-NP-Za-km-z]{25,33}$"); }
+    protected static function _fromTimestamp($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_TIMESTAMP); }
     /**
      * @internal
      */
-    protected static function _checkRippleAddress($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, "^r[1-9A-HJ-NP-Za-km-z]{25,33}$"); }
+    protected static function _checkTimestamp($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_TIMESTAMP); }
+    
+    /**
+     * A Ripple account address
+     */
+    const PATTERN_TYPE_RIPPLEADDRESS = "^r[1-9A-HJ-NP-Za-km-z]{25,33}$";
     
     /**
      * @internal
      */
-    protected static function _toResourceId($x) { if(is_null($x)) return null; return self::_toStringPattern($x, "^(?!$|^[A-Fa-f0-9]{64})[ -~]{1,255}$"); }
+    protected static function _toRippleAddress($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_RIPPLEADDRESS); }
     /**
      * @internal
      */
-    protected static function _fromResourceId($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, "^(?!$|^[A-Fa-f0-9]{64})[ -~]{1,255}$"); }
+    protected static function _fromRippleAddress($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_RIPPLEADDRESS); }
     /**
      * @internal
      */
-    protected static function _checkResourceId($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, "^(?!$|^[A-Fa-f0-9]{64})[ -~]{1,255}$"); }
+    protected static function _checkRippleAddress($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_RIPPLEADDRESS); }
+    
+    /**
+     * A client-supplied unique identifier (ideally a UUID) for this transaction used to prevent duplicate payments and help confirm the transaction's final status. All ASCII printable characters are allowed. Note that 256-bit hex strings are disallowed because of the potential confusion with transaction hashes.
+     */
+    const PATTERN_TYPE_RESOURCEID = "^(?!$|^[A-Fa-f0-9]{64})[ -~]{1,255}$";
     
     /**
      * @internal
      */
-    protected static function _toFloatString($x) { if(is_null($x)) return null; return self::_toStringPattern($x, "^[-+]?[0-9]*[.]?[0-9]+([eE][-+]?[0-9]+)?$"); }
+    protected static function _toResourceId($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_RESOURCEID); }
     /**
      * @internal
      */
-    protected static function _fromFloatString($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, "^[-+]?[0-9]*[.]?[0-9]+([eE][-+]?[0-9]+)?$"); }
+    protected static function _fromResourceId($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_RESOURCEID); }
     /**
      * @internal
      */
-    protected static function _checkFloatString($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, "^[-+]?[0-9]*[.]?[0-9]+([eE][-+]?[0-9]+)?$"); }
+    protected static function _checkResourceId($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_RESOURCEID); }
+    
+    /**
+     * A string representation of a floating point number
+     */
+    const PATTERN_TYPE_FLOATSTRING = "^[-+]?[0-9]*[.]?[0-9]+([eE][-+]?[0-9]+)?$";
     
     /**
      * @internal
      */
-    protected static function _toURL($x) { if(is_null($x)) return null; return self::_toStringPattern($x, "^(ftp://|http://|https://)?([A-Za-z0-9_]+:{0,1}[A-Za-z0-9_]*@)?(^([ \t\r\n\f])+)(:[0-9]+)?(/|/([[A-Za-z0-9_]#!:.?+=&%@!-/]))?$"); }
+    protected static function _toFloatString($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_FLOATSTRING); }
     /**
      * @internal
      */
-    protected static function _fromURL($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, "^(ftp://|http://|https://)?([A-Za-z0-9_]+:{0,1}[A-Za-z0-9_]*@)?(^([ \t\r\n\f])+)(:[0-9]+)?(/|/([[A-Za-z0-9_]#!:.?+=&%@!-/]))?$"); }
+    protected static function _fromFloatString($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_FLOATSTRING); }
     /**
      * @internal
      */
-    protected static function _checkURL($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, "^(ftp://|http://|https://)?([A-Za-z0-9_]+:{0,1}[A-Za-z0-9_]*@)?(^([ \t\r\n\f])+)(:[0-9]+)?(/|/([[A-Za-z0-9_]#!:.?+=&%@!-/]))?$"); }
+    protected static function _checkFloatString($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_FLOATSTRING); }
+    
+    /**
+     * A standard URL
+     */
+    const PATTERN_TYPE_URL = "^(ftp://|http://|https://)?([A-Za-z0-9_]+:{0,1}[A-Za-z0-9_]*@)?(^([ \t\r\n\f])+)(:[0-9]+)?(/|/([[A-Za-z0-9_]#!:.?+=&%@!-/]))?$";
     
     /**
      * @internal
      */
-    protected static function _toCurrency($x) { if(is_null($x)) return null; return self::_toStringPattern($x, "^([a-zA-Z0-9]{3}|[A-Fa-f0-9]{40})$"); }
+    protected static function _toURL($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_URL); }
     /**
      * @internal
      */
-    protected static function _fromCurrency($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, "^([a-zA-Z0-9]{3}|[A-Fa-f0-9]{40})$"); }
+    protected static function _fromURL($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_URL); }
     /**
      * @internal
      */
-    protected static function _checkCurrency($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, "^([a-zA-Z0-9]{3}|[A-Fa-f0-9]{40})$"); }
+    protected static function _checkURL($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_URL); }
+    
+    /**
+     * The three-character code or hex string used to denote currencies
+     */
+    const PATTERN_TYPE_CURRENCY = "^([a-zA-Z0-9]{3}|[A-Fa-f0-9]{40})$";
     
     /**
      * @internal
      */
-    protected static function _toUINT32($x) { if(is_null($x)) return null; return self::_toStringPattern($x, "^$|^(429496729[0-5]|42949672[0-8][0-9]|4294967[01][0-9]{2}|429496[0-6][0-9]{3}|42949[0-5][0-9]{4}|4294[0-8][0-9]{5}|429[0-3][0-9]{6}|42[0-8][0-9]{7}|4[01][0-9]{8}|[1-3][0-9]{9}|[1-9][0-9]{8}|[1-9][0-9]{7}|[1-9][0-9]{6}|[1-9][0-9]{5}|[1-9][0-9]{4}|[1-9][0-9]{3}|[1-9][0-9]{2}|[1-9][0-9]|[0-9])$"); }
+    protected static function _toCurrency($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_CURRENCY); }
     /**
      * @internal
      */
-    protected static function _fromUINT32($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, "^$|^(429496729[0-5]|42949672[0-8][0-9]|4294967[01][0-9]{2}|429496[0-6][0-9]{3}|42949[0-5][0-9]{4}|4294[0-8][0-9]{5}|429[0-3][0-9]{6}|42[0-8][0-9]{7}|4[01][0-9]{8}|[1-3][0-9]{9}|[1-9][0-9]{8}|[1-9][0-9]{7}|[1-9][0-9]{6}|[1-9][0-9]{5}|[1-9][0-9]{4}|[1-9][0-9]{3}|[1-9][0-9]{2}|[1-9][0-9]|[0-9])$"); }
+    protected static function _fromCurrency($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_CURRENCY); }
     /**
      * @internal
      */
-    protected static function _checkUINT32($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, "^$|^(429496729[0-5]|42949672[0-8][0-9]|4294967[01][0-9]{2}|429496[0-6][0-9]{3}|42949[0-5][0-9]{4}|4294[0-8][0-9]{5}|429[0-3][0-9]{6}|42[0-8][0-9]{7}|4[01][0-9]{8}|[1-3][0-9]{9}|[1-9][0-9]{8}|[1-9][0-9]{7}|[1-9][0-9]{6}|[1-9][0-9]{5}|[1-9][0-9]{4}|[1-9][0-9]{3}|[1-9][0-9]{2}|[1-9][0-9]|[0-9])$"); }
+    protected static function _checkCurrency($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_CURRENCY); }
+    
+    /**
+     * A string representation of an unsigned 32-bit integer (0-4294967295)
+     */
+    const PATTERN_TYPE_UINT32 = "^$|^(429496729[0-5]|42949672[0-8][0-9]|4294967[01][0-9]{2}|429496[0-6][0-9]{3}|42949[0-5][0-9]{4}|4294[0-8][0-9]{5}|429[0-3][0-9]{6}|42[0-8][0-9]{7}|4[01][0-9]{8}|[1-3][0-9]{9}|[1-9][0-9]{8}|[1-9][0-9]{7}|[1-9][0-9]{6}|[1-9][0-9]{5}|[1-9][0-9]{4}|[1-9][0-9]{3}|[1-9][0-9]{2}|[1-9][0-9]|[0-9])$";
+    
+    /**
+     * @internal
+     */
+    protected static function _toUINT32($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_UINT32); }
+    /**
+     * @internal
+     */
+    protected static function _fromUINT32($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_UINT32); }
+    /**
+     * @internal
+     */
+    protected static function _checkUINT32($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_UINT32); }
     
     /**
      * @internal

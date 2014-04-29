@@ -51,6 +51,48 @@ class RippleRestNotification extends RippleRestObject {
     );
     
     /**
+     * Pattern Rule for field `RippleRestNotification::$type`
+     * @see RippleRestNotification::$type
+     * @see RippleRestNotification::setType
+     * @see RippleRestNotification::getType
+     */
+    const PATTERN_TYPE = "^payment|order|trustline|accountsettings$";
+    
+    /**
+     * Pattern Rule for field `RippleRestNotification::$direction`
+     * @see RippleRestNotification::$direction
+     * @see RippleRestNotification::setDirection
+     * @see RippleRestNotification::getDirection
+     */
+    const PATTERN_DIRECTION = "^incoming|outgoing|passthrough$";
+    
+    /**
+     * Pattern Rule for field `RippleRestNotification::$state`
+     * @see RippleRestNotification::$state
+     * @see RippleRestNotification::setState
+     * @see RippleRestNotification::getState
+     */
+    const PATTERN_STATE = "^validated|failed$";
+    
+    /**
+     * Pattern Rule for field `RippleRestNotification::$result`
+     * @see RippleRestNotification::$result
+     * @see RippleRestNotification::setResult
+     * @see RippleRestNotification::getResult
+     */
+    const PATTERN_RESULT = "te[cfjlms][A-Za-z_]+";
+    
+    /**
+     * Pattern Rule for field `RippleRestNotification::$ledger`
+     * @see RippleRestNotification::$ledger
+     * @see RippleRestNotification::setLedger
+     * @see RippleRestNotification::getLedger
+     */
+    const PATTERN_LEDGER = "^[0-9]+$";
+    
+
+    
+    /**
      * @internal
      */
     protected $__data = array();
@@ -209,8 +251,8 @@ class RippleRestNotification extends RippleRestObject {
      */
     public function setType($value) {
         try {
-            if (!self::_checkStringPattern($value, "^payment|order|trustline|accountsettings$")) throw new Exception("");
-            $this->_Type = self::_fromStringPattern($value, "^payment|order|trustline|accountsettings$");
+            if (!self::_checkStringPattern($value, self::PATTERN_TYPE)) throw new Exception("");
+            $this->_Type = self::_fromStringPattern($value, self::PATTERN_TYPE);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -220,7 +262,7 @@ class RippleRestNotification extends RippleRestObject {
      * @internal
      */
     protected function initType($value) {
-        $this->_Type = self::_fromStringPattern($value, "^payment|order|trustline|accountsettings$");
+        $this->_Type = self::_fromStringPattern($value, self::PATTERN_TYPE);
     }
     
     /**
@@ -247,8 +289,8 @@ class RippleRestNotification extends RippleRestObject {
      */
     public function setDirection($value) {
         try {
-            if (!self::_checkStringPattern($value, "^incoming|outgoing|passthrough$")) throw new Exception("");
-            $this->_Direction = self::_fromStringPattern($value, "^incoming|outgoing|passthrough$");
+            if (!self::_checkStringPattern($value, self::PATTERN_DIRECTION)) throw new Exception("");
+            $this->_Direction = self::_fromStringPattern($value, self::PATTERN_DIRECTION);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -258,7 +300,7 @@ class RippleRestNotification extends RippleRestObject {
      * @internal
      */
     protected function initDirection($value) {
-        $this->_Direction = self::_fromStringPattern($value, "^incoming|outgoing|passthrough$");
+        $this->_Direction = self::_fromStringPattern($value, self::PATTERN_DIRECTION);
     }
     
     /**
@@ -285,8 +327,8 @@ class RippleRestNotification extends RippleRestObject {
      */
     public function setState($value) {
         try {
-            if (!self::_checkStringPattern($value, "^validated|failed$")) throw new Exception("");
-            $this->_State = self::_fromStringPattern($value, "^validated|failed$");
+            if (!self::_checkStringPattern($value, self::PATTERN_STATE)) throw new Exception("");
+            $this->_State = self::_fromStringPattern($value, self::PATTERN_STATE);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -296,7 +338,7 @@ class RippleRestNotification extends RippleRestObject {
      * @internal
      */
     protected function initState($value) {
-        $this->_State = self::_fromStringPattern($value, "^validated|failed$");
+        $this->_State = self::_fromStringPattern($value, self::PATTERN_STATE);
     }
     
     /**
@@ -323,8 +365,8 @@ class RippleRestNotification extends RippleRestObject {
      */
     public function setResult($value) {
         try {
-            if (!self::_checkStringPattern($value, "te[cfjlms][A-Za-z_]+")) throw new Exception("");
-            $this->_Result = self::_fromStringPattern($value, "te[cfjlms][A-Za-z_]+");
+            if (!self::_checkStringPattern($value, self::PATTERN_RESULT)) throw new Exception("");
+            $this->_Result = self::_fromStringPattern($value, self::PATTERN_RESULT);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -334,7 +376,7 @@ class RippleRestNotification extends RippleRestObject {
      * @internal
      */
     protected function initResult($value) {
-        $this->_Result = self::_fromStringPattern($value, "te[cfjlms][A-Za-z_]+");
+        $this->_Result = self::_fromStringPattern($value, self::PATTERN_RESULT);
     }
     
     /**
@@ -361,8 +403,8 @@ class RippleRestNotification extends RippleRestObject {
      */
     public function setLedger($value) {
         try {
-            if (!self::_checkStringPattern($value, "^[0-9]+$")) throw new Exception("");
-            $this->_Ledger = self::_fromStringPattern($value, "^[0-9]+$");
+            if (!self::_checkStringPattern($value, self::PATTERN_LEDGER)) throw new Exception("");
+            $this->_Ledger = self::_fromStringPattern($value, self::PATTERN_LEDGER);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -372,7 +414,7 @@ class RippleRestNotification extends RippleRestObject {
      * @internal
      */
     protected function initLedger($value) {
-        $this->_Ledger = self::_fromStringPattern($value, "^[0-9]+$");
+        $this->_Ledger = self::_fromStringPattern($value, self::PATTERN_LEDGER);
     }
     
     /**
@@ -577,19 +619,19 @@ class RippleRestNotification extends RippleRestObject {
         $array["account"] = self::_toRippleAddress($this->_Account);
         if (is_null($array["account"])) unset($array["account"]);
     
-        $array["type"] = self::_toStringPattern($this->_Type, "^payment|order|trustline|accountsettings$");
+        $array["type"] = self::_toStringPattern($this->_Type, self::PATTERN_TYPE);
         if (is_null($array["type"])) unset($array["type"]);
     
-        $array["direction"] = self::_toStringPattern($this->_Direction, "^incoming|outgoing|passthrough$");
+        $array["direction"] = self::_toStringPattern($this->_Direction, self::PATTERN_DIRECTION);
         if (is_null($array["direction"])) unset($array["direction"]);
     
-        $array["state"] = self::_toStringPattern($this->_State, "^validated|failed$");
+        $array["state"] = self::_toStringPattern($this->_State, self::PATTERN_STATE);
         if (is_null($array["state"])) unset($array["state"]);
     
-        $array["result"] = self::_toStringPattern($this->_Result, "te[cfjlms][A-Za-z_]+");
+        $array["result"] = self::_toStringPattern($this->_Result, self::PATTERN_RESULT);
         if (is_null($array["result"])) unset($array["result"]);
     
-        $array["ledger"] = self::_toStringPattern($this->_Ledger, "^[0-9]+$");
+        $array["ledger"] = self::_toStringPattern($this->_Ledger, self::PATTERN_LEDGER);
         if (is_null($array["ledger"])) unset($array["ledger"]);
     
         $array["hash"] = self::_toHash256($this->_Hash);

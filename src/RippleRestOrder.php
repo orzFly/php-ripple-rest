@@ -69,6 +69,48 @@ class RippleRestOrder extends RippleRestObject {
     );
     
     /**
+     * Pattern Rule for field `RippleRestOrder::$ledgerTimeout`
+     * @see RippleRestOrder::$ledgerTimeout
+     * @see RippleRestOrder::setLedgerTimeout
+     * @see RippleRestOrder::getLedgerTimeout
+     */
+    const PATTERN_LEDGER_TIMEOUT = "^[0-9]*$";
+    
+    /**
+     * Pattern Rule for field `RippleRestOrder::$cancelReplace`
+     * @see RippleRestOrder::$cancelReplace
+     * @see RippleRestOrder::setCancelReplace
+     * @see RippleRestOrder::getCancelReplace
+     */
+    const PATTERN_CANCEL_REPLACE = "^d*$";
+    
+    /**
+     * Pattern Rule for field `RippleRestOrder::$sequence`
+     * @see RippleRestOrder::$sequence
+     * @see RippleRestOrder::setSequence
+     * @see RippleRestOrder::getSequence
+     */
+    const PATTERN_SEQUENCE = "^[0-9]*$";
+    
+    /**
+     * Pattern Rule for field `RippleRestOrder::$state`
+     * @see RippleRestOrder::$state
+     * @see RippleRestOrder::setState
+     * @see RippleRestOrder::getState
+     */
+    const PATTERN_STATE = "^active|validated|filled|cancelled|expired|failed$";
+    
+    /**
+     * Pattern Rule for field `RippleRestOrder::$ledger`
+     * @see RippleRestOrder::$ledger
+     * @see RippleRestOrder::setLedger
+     * @see RippleRestOrder::getLedger
+     */
+    const PATTERN_LEDGER = "^[0-9]+$";
+    
+
+    
+    /**
      * @internal
      */
     protected $__data = array();
@@ -417,8 +459,8 @@ class RippleRestOrder extends RippleRestObject {
      */
     public function setLedgerTimeout($value) {
         try {
-            if (!self::_checkStringPattern($value, "^[0-9]*$")) throw new Exception("");
-            $this->_LedgerTimeout = self::_fromStringPattern($value, "^[0-9]*$");
+            if (!self::_checkStringPattern($value, self::PATTERN_LEDGER_TIMEOUT)) throw new Exception("");
+            $this->_LedgerTimeout = self::_fromStringPattern($value, self::PATTERN_LEDGER_TIMEOUT);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -428,7 +470,7 @@ class RippleRestOrder extends RippleRestObject {
      * @internal
      */
     protected function initLedgerTimeout($value) {
-        $this->_LedgerTimeout = self::_fromStringPattern($value, "^[0-9]*$");
+        $this->_LedgerTimeout = self::_fromStringPattern($value, self::PATTERN_LEDGER_TIMEOUT);
     }
     
     /**
@@ -569,8 +611,8 @@ class RippleRestOrder extends RippleRestObject {
      */
     public function setCancelReplace($value) {
         try {
-            if (!self::_checkStringPattern($value, "^d*$")) throw new Exception("");
-            $this->_CancelReplace = self::_fromStringPattern($value, "^d*$");
+            if (!self::_checkStringPattern($value, self::PATTERN_CANCEL_REPLACE)) throw new Exception("");
+            $this->_CancelReplace = self::_fromStringPattern($value, self::PATTERN_CANCEL_REPLACE);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -580,7 +622,7 @@ class RippleRestOrder extends RippleRestObject {
      * @internal
      */
     protected function initCancelReplace($value) {
-        $this->_CancelReplace = self::_fromStringPattern($value, "^d*$");
+        $this->_CancelReplace = self::_fromStringPattern($value, self::PATTERN_CANCEL_REPLACE);
     }
     
     /**
@@ -607,8 +649,8 @@ class RippleRestOrder extends RippleRestObject {
      */
     public function setSequence($value) {
         try {
-            if (!self::_checkStringPattern($value, "^[0-9]*$")) throw new Exception("");
-            $this->_Sequence = self::_fromStringPattern($value, "^[0-9]*$");
+            if (!self::_checkStringPattern($value, self::PATTERN_SEQUENCE)) throw new Exception("");
+            $this->_Sequence = self::_fromStringPattern($value, self::PATTERN_SEQUENCE);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -618,7 +660,7 @@ class RippleRestOrder extends RippleRestObject {
      * @internal
      */
     protected function initSequence($value) {
-        $this->_Sequence = self::_fromStringPattern($value, "^[0-9]*$");
+        $this->_Sequence = self::_fromStringPattern($value, self::PATTERN_SEQUENCE);
     }
     
     /**
@@ -683,8 +725,8 @@ class RippleRestOrder extends RippleRestObject {
      */
     public function setState($value) {
         try {
-            if (!self::_checkStringPattern($value, "^active|validated|filled|cancelled|expired|failed$")) throw new Exception("");
-            $this->_State = self::_fromStringPattern($value, "^active|validated|filled|cancelled|expired|failed$");
+            if (!self::_checkStringPattern($value, self::PATTERN_STATE)) throw new Exception("");
+            $this->_State = self::_fromStringPattern($value, self::PATTERN_STATE);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -694,7 +736,7 @@ class RippleRestOrder extends RippleRestObject {
      * @internal
      */
     protected function initState($value) {
-        $this->_State = self::_fromStringPattern($value, "^active|validated|filled|cancelled|expired|failed$");
+        $this->_State = self::_fromStringPattern($value, self::PATTERN_STATE);
     }
     
     /**
@@ -721,8 +763,8 @@ class RippleRestOrder extends RippleRestObject {
      */
     public function setLedger($value) {
         try {
-            if (!self::_checkStringPattern($value, "^[0-9]+$")) throw new Exception("");
-            $this->_Ledger = self::_fromStringPattern($value, "^[0-9]+$");
+            if (!self::_checkStringPattern($value, self::PATTERN_LEDGER)) throw new Exception("");
+            $this->_Ledger = self::_fromStringPattern($value, self::PATTERN_LEDGER);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -732,7 +774,7 @@ class RippleRestOrder extends RippleRestObject {
      * @internal
      */
     protected function initLedger($value) {
-        $this->_Ledger = self::_fromStringPattern($value, "^[0-9]+$");
+        $this->_Ledger = self::_fromStringPattern($value, self::PATTERN_LEDGER);
     }
     
     /**
@@ -839,7 +881,7 @@ class RippleRestOrder extends RippleRestObject {
         $array["expiration_timestamp"] = self::_toTimestamp($this->_ExpirationTimestamp);
         if (is_null($array["expiration_timestamp"])) unset($array["expiration_timestamp"]);
     
-        $array["ledger_timeout"] = self::_toStringPattern($this->_LedgerTimeout, "^[0-9]*$");
+        $array["ledger_timeout"] = self::_toStringPattern($this->_LedgerTimeout, self::PATTERN_LEDGER_TIMEOUT);
         if (is_null($array["ledger_timeout"])) unset($array["ledger_timeout"]);
     
         $array["immediate_or_cancel"] = self::_toBoolean($this->_ImmediateOrCancel);
@@ -851,19 +893,19 @@ class RippleRestOrder extends RippleRestObject {
         $array["maximize_buy_or_sell"] = self::_toBoolean($this->_MaximizeBuyOrSell);
         if (is_null($array["maximize_buy_or_sell"])) unset($array["maximize_buy_or_sell"]);
     
-        $array["cancel_replace"] = self::_toStringPattern($this->_CancelReplace, "^d*$");
+        $array["cancel_replace"] = self::_toStringPattern($this->_CancelReplace, self::PATTERN_CANCEL_REPLACE);
         if (is_null($array["cancel_replace"])) unset($array["cancel_replace"]);
     
-        $array["sequence"] = self::_toStringPattern($this->_Sequence, "^[0-9]*$");
+        $array["sequence"] = self::_toStringPattern($this->_Sequence, self::PATTERN_SEQUENCE);
         if (is_null($array["sequence"])) unset($array["sequence"]);
     
         $array["fee"] = self::_toFloatString($this->_Fee);
         if (is_null($array["fee"])) unset($array["fee"]);
     
-        $array["state"] = self::_toStringPattern($this->_State, "^active|validated|filled|cancelled|expired|failed$");
+        $array["state"] = self::_toStringPattern($this->_State, self::PATTERN_STATE);
         if (is_null($array["state"])) unset($array["state"]);
     
-        $array["ledger"] = self::_toStringPattern($this->_Ledger, "^[0-9]+$");
+        $array["ledger"] = self::_toStringPattern($this->_Ledger, self::PATTERN_LEDGER);
         if (is_null($array["ledger"])) unset($array["ledger"]);
     
         $array["hash"] = self::_toHash256($this->_Hash);

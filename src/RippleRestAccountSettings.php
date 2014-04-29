@@ -57,6 +57,24 @@ class RippleRestAccountSettings extends RippleRestObject {
     );
     
     /**
+     * Pattern Rule for field `RippleRestAccountSettings::$messageKey`
+     * @see RippleRestAccountSettings::$messageKey
+     * @see RippleRestAccountSettings::setMessageKey
+     * @see RippleRestAccountSettings::getMessageKey
+     */
+    const PATTERN_MESSAGE_KEY = "^([0-9a-fA-F]{2}){0,33}$";
+    
+    /**
+     * Pattern Rule for field `RippleRestAccountSettings::$ledger`
+     * @see RippleRestAccountSettings::$ledger
+     * @see RippleRestAccountSettings::setLedger
+     * @see RippleRestAccountSettings::getLedger
+     */
+    const PATTERN_LEDGER = "^[0-9]+$";
+    
+
+    
+    /**
      * @internal
      */
     protected $__data = array();
@@ -329,8 +347,8 @@ class RippleRestAccountSettings extends RippleRestObject {
      */
     public function setMessageKey($value) {
         try {
-            if (!self::_checkStringPattern($value, "^([0-9a-fA-F]{2}){0,33}$")) throw new Exception("");
-            $this->_MessageKey = self::_fromStringPattern($value, "^([0-9a-fA-F]{2}){0,33}$");
+            if (!self::_checkStringPattern($value, self::PATTERN_MESSAGE_KEY)) throw new Exception("");
+            $this->_MessageKey = self::_fromStringPattern($value, self::PATTERN_MESSAGE_KEY);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -340,7 +358,7 @@ class RippleRestAccountSettings extends RippleRestObject {
      * @internal
      */
     protected function initMessageKey($value) {
-        $this->_MessageKey = self::_fromStringPattern($value, "^([0-9a-fA-F]{2}){0,33}$");
+        $this->_MessageKey = self::_fromStringPattern($value, self::PATTERN_MESSAGE_KEY);
     }
     
     /**
@@ -595,8 +613,8 @@ class RippleRestAccountSettings extends RippleRestObject {
      */
     public function setLedger($value) {
         try {
-            if (!self::_checkStringPattern($value, "^[0-9]+$")) throw new Exception("");
-            $this->_Ledger = self::_fromStringPattern($value, "^[0-9]+$");
+            if (!self::_checkStringPattern($value, self::PATTERN_LEDGER)) throw new Exception("");
+            $this->_Ledger = self::_fromStringPattern($value, self::PATTERN_LEDGER);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -606,7 +624,7 @@ class RippleRestAccountSettings extends RippleRestObject {
      * @internal
      */
     protected function initLedger($value) {
-        $this->_Ledger = self::_fromStringPattern($value, "^[0-9]+$");
+        $this->_Ledger = self::_fromStringPattern($value, self::PATTERN_LEDGER);
     }
     
     /**
@@ -669,7 +687,7 @@ class RippleRestAccountSettings extends RippleRestObject {
         $array["email_hash"] = self::_toHash128($this->_EmailHash);
         if (is_null($array["email_hash"])) unset($array["email_hash"]);
     
-        $array["message_key"] = self::_toStringPattern($this->_MessageKey, "^([0-9a-fA-F]{2}){0,33}$");
+        $array["message_key"] = self::_toStringPattern($this->_MessageKey, self::PATTERN_MESSAGE_KEY);
         if (is_null($array["message_key"])) unset($array["message_key"]);
     
         $array["transfer_rate"] = self::_toFloat($this->_TransferRate);
@@ -690,7 +708,7 @@ class RippleRestAccountSettings extends RippleRestObject {
         $array["trustline_count"] = self::_toUINT32($this->_TrustlineCount);
         if (is_null($array["trustline_count"])) unset($array["trustline_count"]);
     
-        $array["ledger"] = self::_toStringPattern($this->_Ledger, "^[0-9]+$");
+        $array["ledger"] = self::_toStringPattern($this->_Ledger, self::PATTERN_LEDGER);
         if (is_null($array["ledger"])) unset($array["ledger"]);
     
         $array["hash"] = self::_toHash256($this->_Hash);

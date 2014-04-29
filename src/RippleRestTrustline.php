@@ -54,6 +54,16 @@ class RippleRestTrustline extends RippleRestObject {
     );
     
     /**
+     * Pattern Rule for field `RippleRestTrustline::$ledger`
+     * @see RippleRestTrustline::$ledger
+     * @see RippleRestTrustline::setLedger
+     * @see RippleRestTrustline::getLedger
+     */
+    const PATTERN_LEDGER = "^[0-9]+$";
+    
+
+    
+    /**
      * @internal
      */
     protected $__data = array();
@@ -516,8 +526,8 @@ class RippleRestTrustline extends RippleRestObject {
      */
     public function setLedger($value) {
         try {
-            if (!self::_checkStringPattern($value, "^[0-9]+$")) throw new Exception("");
-            $this->_Ledger = self::_fromStringPattern($value, "^[0-9]+$");
+            if (!self::_checkStringPattern($value, self::PATTERN_LEDGER)) throw new Exception("");
+            $this->_Ledger = self::_fromStringPattern($value, self::PATTERN_LEDGER);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -527,7 +537,7 @@ class RippleRestTrustline extends RippleRestObject {
      * @internal
      */
     protected function initLedger($value) {
-        $this->_Ledger = self::_fromStringPattern($value, "^[0-9]+$");
+        $this->_Ledger = self::_fromStringPattern($value, self::PATTERN_LEDGER);
     }
     
     /**
@@ -644,7 +654,7 @@ class RippleRestTrustline extends RippleRestObject {
         $array["counterparty_allows_rippling"] = self::_toBoolean($this->_CounterpartyAllowsRippling);
         if (is_null($array["counterparty_allows_rippling"])) unset($array["counterparty_allows_rippling"]);
     
-        $array["ledger"] = self::_toStringPattern($this->_Ledger, "^[0-9]+$");
+        $array["ledger"] = self::_toStringPattern($this->_Ledger, self::PATTERN_LEDGER);
         if (is_null($array["ledger"])) unset($array["ledger"]);
     
         $array["hash"] = self::_toHash256($this->_Hash);

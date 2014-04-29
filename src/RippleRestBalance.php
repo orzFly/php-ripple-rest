@@ -27,6 +27,16 @@ class RippleRestBalance extends RippleRestObject {
     );
     
     /**
+     * Pattern Rule for field `RippleRestBalance::$counterparty`
+     * @see RippleRestBalance::$counterparty
+     * @see RippleRestBalance::setCounterparty
+     * @see RippleRestBalance::getCounterparty
+     */
+    const PATTERN_COUNTERPARTY = "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$";
+    
+
+    
+    /**
      * @internal
      */
     protected $__data = array();
@@ -223,8 +233,8 @@ class RippleRestBalance extends RippleRestObject {
      */
     public function setCounterparty($value) {
         try {
-            if (!self::_checkStringPattern($value, "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$")) throw new Exception("");
-            $this->_Counterparty = self::_fromStringPattern($value, "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$");
+            if (!self::_checkStringPattern($value, self::PATTERN_COUNTERPARTY)) throw new Exception("");
+            $this->_Counterparty = self::_fromStringPattern($value, self::PATTERN_COUNTERPARTY);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -234,7 +244,7 @@ class RippleRestBalance extends RippleRestObject {
      * @internal
      */
     protected function initCounterparty($value) {
-        $this->_Counterparty = self::_fromStringPattern($value, "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$");
+        $this->_Counterparty = self::_fromStringPattern($value, self::PATTERN_COUNTERPARTY);
     }
 
 
@@ -254,7 +264,7 @@ class RippleRestBalance extends RippleRestObject {
         if (is_null($array["currency"]))
             throw new Exception("Field Currency is required in RippleRestBalance");
     
-        $array["counterparty"] = self::_toStringPattern($this->_Counterparty, "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$");
+        $array["counterparty"] = self::_toStringPattern($this->_Counterparty, self::PATTERN_COUNTERPARTY);
         if (is_null($array["counterparty"])) unset($array["counterparty"]);
 
         return $array;

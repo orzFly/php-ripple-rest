@@ -78,6 +78,40 @@ class RippleRestPayment extends RippleRestObject {
     );
     
     /**
+     * Pattern Rule for field `RippleRestPayment::$direction`
+     * @see RippleRestPayment::$direction
+     * @see RippleRestPayment::setDirection
+     * @see RippleRestPayment::getDirection
+     */
+    const PATTERN_DIRECTION = "^incoming|outgoing|passthrough$";
+    
+    /**
+     * Pattern Rule for field `RippleRestPayment::$state`
+     * @see RippleRestPayment::$state
+     * @see RippleRestPayment::setState
+     * @see RippleRestPayment::getState
+     */
+    const PATTERN_STATE = "^validated|failed|new$";
+    
+    /**
+     * Pattern Rule for field `RippleRestPayment::$result`
+     * @see RippleRestPayment::$result
+     * @see RippleRestPayment::setResult
+     * @see RippleRestPayment::getResult
+     */
+    const PATTERN_RESULT = "te[cfjlms][A-Za-z_]+";
+    
+    /**
+     * Pattern Rule for field `RippleRestPayment::$ledger`
+     * @see RippleRestPayment::$ledger
+     * @see RippleRestPayment::setLedger
+     * @see RippleRestPayment::getLedger
+     */
+    const PATTERN_LEDGER = "^[0-9]+$";
+    
+
+    
+    /**
      * @internal
      */
     protected $__data = array();
@@ -616,8 +650,8 @@ class RippleRestPayment extends RippleRestObject {
      */
     public function setDirection($value) {
         try {
-            if (!self::_checkStringPattern($value, "^incoming|outgoing|passthrough$")) throw new Exception("");
-            $this->_Direction = self::_fromStringPattern($value, "^incoming|outgoing|passthrough$");
+            if (!self::_checkStringPattern($value, self::PATTERN_DIRECTION)) throw new Exception("");
+            $this->_Direction = self::_fromStringPattern($value, self::PATTERN_DIRECTION);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -627,7 +661,7 @@ class RippleRestPayment extends RippleRestObject {
      * @internal
      */
     protected function initDirection($value) {
-        $this->_Direction = self::_fromStringPattern($value, "^incoming|outgoing|passthrough$");
+        $this->_Direction = self::_fromStringPattern($value, self::PATTERN_DIRECTION);
     }
     
     /**
@@ -654,8 +688,8 @@ class RippleRestPayment extends RippleRestObject {
      */
     public function setState($value) {
         try {
-            if (!self::_checkStringPattern($value, "^validated|failed|new$")) throw new Exception("");
-            $this->_State = self::_fromStringPattern($value, "^validated|failed|new$");
+            if (!self::_checkStringPattern($value, self::PATTERN_STATE)) throw new Exception("");
+            $this->_State = self::_fromStringPattern($value, self::PATTERN_STATE);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -665,7 +699,7 @@ class RippleRestPayment extends RippleRestObject {
      * @internal
      */
     protected function initState($value) {
-        $this->_State = self::_fromStringPattern($value, "^validated|failed|new$");
+        $this->_State = self::_fromStringPattern($value, self::PATTERN_STATE);
     }
     
     /**
@@ -692,8 +726,8 @@ class RippleRestPayment extends RippleRestObject {
      */
     public function setResult($value) {
         try {
-            if (!self::_checkStringPattern($value, "te[cfjlms][A-Za-z_]+")) throw new Exception("");
-            $this->_Result = self::_fromStringPattern($value, "te[cfjlms][A-Za-z_]+");
+            if (!self::_checkStringPattern($value, self::PATTERN_RESULT)) throw new Exception("");
+            $this->_Result = self::_fromStringPattern($value, self::PATTERN_RESULT);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -703,7 +737,7 @@ class RippleRestPayment extends RippleRestObject {
      * @internal
      */
     protected function initResult($value) {
-        $this->_Result = self::_fromStringPattern($value, "te[cfjlms][A-Za-z_]+");
+        $this->_Result = self::_fromStringPattern($value, self::PATTERN_RESULT);
     }
     
     /**
@@ -730,8 +764,8 @@ class RippleRestPayment extends RippleRestObject {
      */
     public function setLedger($value) {
         try {
-            if (!self::_checkStringPattern($value, "^[0-9]+$")) throw new Exception("");
-            $this->_Ledger = self::_fromStringPattern($value, "^[0-9]+$");
+            if (!self::_checkStringPattern($value, self::PATTERN_LEDGER)) throw new Exception("");
+            $this->_Ledger = self::_fromStringPattern($value, self::PATTERN_LEDGER);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -741,7 +775,7 @@ class RippleRestPayment extends RippleRestObject {
      * @internal
      */
     protected function initLedger($value) {
-        $this->_Ledger = self::_fromStringPattern($value, "^[0-9]+$");
+        $this->_Ledger = self::_fromStringPattern($value, self::PATTERN_LEDGER);
     }
     
     /**
@@ -979,16 +1013,16 @@ class RippleRestPayment extends RippleRestObject {
         $array["no_direct_ripple"] = self::_toBoolean($this->_NoDirectRipple);
         if (is_null($array["no_direct_ripple"])) unset($array["no_direct_ripple"]);
     
-        $array["direction"] = self::_toStringPattern($this->_Direction, "^incoming|outgoing|passthrough$");
+        $array["direction"] = self::_toStringPattern($this->_Direction, self::PATTERN_DIRECTION);
         if (is_null($array["direction"])) unset($array["direction"]);
     
-        $array["state"] = self::_toStringPattern($this->_State, "^validated|failed|new$");
+        $array["state"] = self::_toStringPattern($this->_State, self::PATTERN_STATE);
         if (is_null($array["state"])) unset($array["state"]);
     
-        $array["result"] = self::_toStringPattern($this->_Result, "te[cfjlms][A-Za-z_]+");
+        $array["result"] = self::_toStringPattern($this->_Result, self::PATTERN_RESULT);
         if (is_null($array["result"])) unset($array["result"]);
     
-        $array["ledger"] = self::_toStringPattern($this->_Ledger, "^[0-9]+$");
+        $array["ledger"] = self::_toStringPattern($this->_Ledger, self::PATTERN_LEDGER);
         if (is_null($array["ledger"])) unset($array["ledger"]);
     
         $array["hash"] = self::_toHash256($this->_Hash);

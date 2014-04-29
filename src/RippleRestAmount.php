@@ -30,6 +30,24 @@ class RippleRestAmount extends RippleRestObject {
     );
     
     /**
+     * Pattern Rule for field `RippleRestAmount::$issuer`
+     * @see RippleRestAmount::$issuer
+     * @see RippleRestAmount::setIssuer
+     * @see RippleRestAmount::getIssuer
+     */
+    const PATTERN_ISSUER = "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$";
+    
+    /**
+     * Pattern Rule for field `RippleRestAmount::$counterparty`
+     * @see RippleRestAmount::$counterparty
+     * @see RippleRestAmount::setCounterparty
+     * @see RippleRestAmount::getCounterparty
+     */
+    const PATTERN_COUNTERPARTY = "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$";
+    
+
+    
+    /**
      * @internal
      */
     protected $__data = array();
@@ -226,8 +244,8 @@ class RippleRestAmount extends RippleRestObject {
      */
     public function setIssuer($value) {
         try {
-            if (!self::_checkStringPattern($value, "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$")) throw new Exception("");
-            $this->_Issuer = self::_fromStringPattern($value, "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$");
+            if (!self::_checkStringPattern($value, self::PATTERN_ISSUER)) throw new Exception("");
+            $this->_Issuer = self::_fromStringPattern($value, self::PATTERN_ISSUER);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -237,7 +255,7 @@ class RippleRestAmount extends RippleRestObject {
      * @internal
      */
     protected function initIssuer($value) {
-        $this->_Issuer = self::_fromStringPattern($value, "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$");
+        $this->_Issuer = self::_fromStringPattern($value, self::PATTERN_ISSUER);
     }
     
     /**
@@ -264,8 +282,8 @@ class RippleRestAmount extends RippleRestObject {
      */
     public function setCounterparty($value) {
         try {
-            if (!self::_checkStringPattern($value, "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$")) throw new Exception("");
-            $this->_Counterparty = self::_fromStringPattern($value, "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$");
+            if (!self::_checkStringPattern($value, self::PATTERN_COUNTERPARTY)) throw new Exception("");
+            $this->_Counterparty = self::_fromStringPattern($value, self::PATTERN_COUNTERPARTY);
         } catch(Exception $e) {
             throw new Exception("Cannot convert " . ((string)$value) . " to " . "string");
         }
@@ -275,7 +293,7 @@ class RippleRestAmount extends RippleRestObject {
      * @internal
      */
     protected function initCounterparty($value) {
-        $this->_Counterparty = self::_fromStringPattern($value, "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$");
+        $this->_Counterparty = self::_fromStringPattern($value, self::PATTERN_COUNTERPARTY);
     }
 
 
@@ -295,10 +313,10 @@ class RippleRestAmount extends RippleRestObject {
         if (is_null($array["currency"]))
             throw new Exception("Field Currency is required in RippleRestAmount");
     
-        $array["issuer"] = self::_toStringPattern($this->_Issuer, "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$");
+        $array["issuer"] = self::_toStringPattern($this->_Issuer, self::PATTERN_ISSUER);
         if (is_null($array["issuer"])) unset($array["issuer"]);
     
-        $array["counterparty"] = self::_toStringPattern($this->_Counterparty, "^$|^r[1-9A-HJ-NP-Za-km-z]{25,33}$");
+        $array["counterparty"] = self::_toStringPattern($this->_Counterparty, self::PATTERN_COUNTERPARTY);
         if (is_null($array["counterparty"])) unset($array["counterparty"]);
 
         return $array;

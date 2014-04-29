@@ -32,6 +32,7 @@ schemas.values.select{|i|i["type"] == "object"}.each do |json|
   to_array = StringIO.new
   io2 = StringIO.new
   helpio = StringIO.new
+  patterncache = StringIO.new
   json["properties"].each do |k, v|
     type = ""
     type2 = typeobj = to = from = check = nil
@@ -76,9 +77,19 @@ schemas.values.select{|i|i["type"] == "object"}.each do |json|
       from = lambda { |x| "self::_from#{typeobj}(#{x})" }
       check = lambda { |x| "self::_check#{typeobj}(#{x})" }
     elsif typeobj.is_a?(Array) && typeobj[0] == :String
-      to = lambda { |x| "self::_toStringPattern(#{x}, #{typeobj[1].inspect})" }
-      from = lambda { |x| "self::_fromStringPattern(#{x}, #{typeobj[1].inspect})" }
-      check = lambda { |x| "self::_checkStringPattern(#{x}, #{typeobj[1].inspect})" }
+      patterncache.puts <<EOF
+    /**
+     * Pattern Rule for field `RippleRest#{key}::$#{k.camel_case_lower}`
+     * @see RippleRest#{key}::$#{k.camel_case_lower}
+     * @see RippleRest#{key}::set#{k.camel_case}
+     * @see RippleRest#{key}::get#{k.camel_case}
+     */
+    const PATTERN_#{k.upcase} = #{typeobj[1].inspect};
+    
+EOF
+      to = lambda { |x| "self::_toStringPattern(#{x}, self::PATTERN_#{k.upcase})" }
+      from = lambda { |x| "self::_fromStringPattern(#{x}, self::PATTERN_#{k.upcase})" }
+      check = lambda { |x| "self::_checkStringPattern(#{x}, self::PATTERN_#{k.upcase})" }
     end
     io2.puts <<EOF
     
@@ -162,6 +173,8 @@ class RippleRest#{key} extends RippleRestObject {
           }.flatten.join(", \n        ")
         }
     );
+    
+#{patterncache.string}
     
     /**
      * @internal
@@ -350,17 +363,22 @@ EOF
     
     io.puts <<EOF
     /**
-     * @internal
+     * #{json["description"]}
      */
-    protected static function _to#{key}($x) { if(is_null($x)) return null; return self::_toStringPattern($x, #{json["pattern"].inspect}); }
+    const PATTERN_TYPE_#{key.upcase} = #{json["pattern"].inspect};
+    
     /**
      * @internal
      */
-    protected static function _from#{key}($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, #{json["pattern"].inspect}); }
+    protected static function _to#{key}($x) { if(is_null($x)) return null; return self::_toStringPattern($x, PATTERN_TYPE_#{key.upcase}); }
     /**
      * @internal
      */
-    protected static function _check#{key}($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, #{json["pattern"].inspect}); }
+    protected static function _from#{key}($x) { if(is_null($x)) return null; return self::_fromStringPattern($x, PATTERN_TYPE_#{key.upcase}); }
+    /**
+     * @internal
+     */
+    protected static function _check#{key}($x) { if(is_null($x)) return true; return self::_checkStringPattern($x, PATTERN_TYPE_#{key.upcase}); }
     
 EOF
   end
