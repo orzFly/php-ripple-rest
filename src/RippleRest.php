@@ -127,7 +127,7 @@ class RippleRest {
         $json = json_decode($response, true);
         if (!is_null($json) && !$json["success"])
         {
-            $ex = new RippleRestError(isset($json["message"]) ? $json["message"] : isset($json["error"]) ? $json["error"] : json_encode($json));
+            $ex = new RippleRestError(isset($json["message"]) ? $json["message"] : (isset($json["error"]) ? $json["error"] : json_encode($json)));
             $ex->error = $json;
             throw $ex;
         }
