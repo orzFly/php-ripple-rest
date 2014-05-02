@@ -271,8 +271,9 @@ class RippleRestAccount {
         
         for($i = 0; $i < count($data); $i++)
         {
+            $clientResourceId = $data[$i]["client_resource_id"];
             $data[$i] = new RippleRestPayment($data[$i]["payment"]);
-            $data[$i]->clientResourceId = $data[$i]["client_resource_id"];
+            $data[$i]->clientResourceId = $clientResourceId;
         }
         
         return $data;
