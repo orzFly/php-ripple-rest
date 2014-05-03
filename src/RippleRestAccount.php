@@ -144,7 +144,7 @@ class RippleRestAccount {
     public function getPayment($hash)
     {
         $result = RippleRest::get("v1/accounts/" . $this->address . "/payments/$hash");
-        return new RippleRestPayment($result);
+        return new RippleRestPayment($result["payment"]);
     }
     
     /**
