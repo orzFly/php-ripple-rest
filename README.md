@@ -3,6 +3,9 @@ RippleRest PHP Client
 
 This is a client that interacts with the Ripple network using the Ripple REST APIs.
 
+This library can be used directly by include all classes directly, or by Composer: [![PHP version](https://badge.fury.io/ph/orzfly%2Fphp-ripple-rest.svg)](http://badge.fury.io/ph/orzfly%2Fphp-ripple-rest)
+
+
 ```php
 RippleRest::setup("http://localhost:5990");
 
